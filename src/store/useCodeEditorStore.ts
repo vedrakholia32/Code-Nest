@@ -1,7 +1,7 @@
-import { CodeEditorState } from "./../types/index";
+import { CodeEditorState } from "../types/index";
 import { LANGUAGE_CONFIG } from "@/app/(root)/_constants";
 import { create } from "zustand";
-import * as monaco from "monaco-editor";
+import { editor } from "monaco-editor";
 
 const getInitialState = () => {
   // if we're on the server, return default values
@@ -33,12 +33,12 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
     output: "",
     isRunning: false,
     error: null,
-  editor: null as monaco.editor.IStandaloneCodeEditor | null,
+    editor: null,
     executionResult: null,
 
-  getCode: () => get().editor?.getValue() || "",
+    getCode: () => get().editor?.getValue() || "",
 
-  setEditor: (editor: monaco.editor.IStandaloneCodeEditor) => {
+    setEditor: (editor: editor.IStandaloneCodeEditor) => {
       const savedCode = localStorage.getItem(`editor-code-${get().language}`);
       if (savedCode) editor.setValue(savedCode);
 
@@ -56,7 +56,6 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
     },
 
     setLanguage: (language: string) => {
-      // Save current language code before switching
       const currentCode = get().editor?.getValue();
       if (currentCode) {
         localStorage.setItem(`editor-code-${get().language}`, currentCode);
@@ -100,13 +99,11 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
 
         console.log("data back from piston:", data);
 
-        // handle API-level erros
         if (data.message) {
           set({ error: data.message, executionResult: { code, output: "", error: data.message } });
           return;
         }
 
-        // handle compilation errors
         if (data.compile && data.compile.code !== 0) {
           const error = data.compile.stderr || data.compile.output;
           set({
@@ -133,7 +130,6 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
           return;
         }
 
-        // if we get here, execution was successful
         const output = data.run.output;
 
         set({
