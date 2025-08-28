@@ -70,7 +70,7 @@ function SnippetCard({ snippet }: { snippet: Snippet }) {
                   <span className="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-lg text-xs font-medium">
                     {snippet.language}
                   </span>
-                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <div className="flex items-center gap-2 text-xs text-gray-500 ">
                     <Clock className="size-3" />
                     {new Date(snippet._creationTime).toLocaleDateString()}
                   </div>
@@ -91,12 +91,12 @@ function SnippetCard({ snippet }: { snippet: Snippet }) {
                                   ${
                                     isDeleting
                                       ? "bg-red-500/20 text-red-400 cursor-not-allowed"
-                                      : "bg-gray-500/10 text-gray-400 hover:bg-red-500/10 hover:text-red-400"
+                                      : "bg-gray-500/10 text-gray-400 hover:bg-red-500/10 hover:text-red-400 "
                                   }
                                 `}
                     >
                       {isDeleting ? (
-                        <div className="size-3.5 border-2 border-red-400/30 border-t-red-400 rounded-full animate-spin" />
+                        <div className="size-3.5 border-2 border-red-400/30 border-t-red-400 rounded-full animate-spin hover:cursor-pointer" />
                       ) : (
                         <Trash2 className="size-3.5" />
                       )}
