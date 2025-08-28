@@ -6,15 +6,17 @@ import { Editor } from "@monaco-editor/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { RotateCcwIcon, ShareIcon, TypeIcon } from "lucide-react";
-import { useClerk } from "@clerk/nextjs";
+import { SignedIn, useClerk } from "@clerk/nextjs";
 import { EditorPanelSkeleton } from "./EditorPanelSkeleton";
 import useMounted from "@/hooks/useMounted";
 import ShareSnippetDialog from "./ShareSnippetDialog";
+import RunButton from "./RunButton";
 
 function EditorPanel() {
   const clerk = useClerk();
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
-  const { language, theme, fontSize, editor, setFontSize, setEditor } = useCodeEditorStore();
+  const { language, theme, fontSize, editor, setFontSize, setEditor } =
+    useCodeEditorStore();
 
   const mounted = useMounted();
 
@@ -25,9 +27,9 @@ function EditorPanel() {
   }, [language, editor]);
 
   useEffect(() => {
-    const savedFontSize = localStorage.getItem("editor-font-size");
-    if (savedFontSize) setFontSize(parseInt(savedFontSize));
-  }, [setFontSize]);
+    const { loadSavedState } = useCodeEditorStore.getState();
+    loadSavedState();
+  }, []);
 
   const handleRefresh = () => {
     const defaultCode = LANGUAGE_CONFIG[language].defaultCode;
@@ -54,37 +56,50 @@ function EditorPanel() {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#1e1e2e] ring-1 ring-white/5">
-              <Image src={"/" + language + ".png"} alt="Logo" width={24} height={24} />
+              <Image
+                src={"/" + language + ".png"}
+                alt="Logo"
+                width={24}
+                height={24}
+              />
             </div>
             <div>
               <h2 className="text-sm font-medium text-white">Code Editor</h2>
-              <p className="text-xs text-gray-500">Write and execute your code</p>
+              <p className="text-xs text-gray-500">
+                Write and execute your code
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             {/* Font Size Slider */}
-            <div className="flex items-center gap-3 px-3 py-2 bg-[#1e1e2e] rounded-lg ring-1 ring-white/5">
+            <div className="flex items-center gap-3 px-2 py-1 bg-[#1e1e2e] rounded-lg ring-1 ring-white/5">
               <TypeIcon className="size-4 text-gray-400" />
-              <div className="flex items-center gap-3">
-                <input
-                  type="range"
-                  min="12"
-                  max="24"
-                  value={fontSize}
-                  onChange={(e) => handleFontSizeChange(parseInt(e.target.value))}
-                  className="w-20 h-1 bg-gray-600 rounded-lg cursor-pointer"
-                />
-                <span className="text-sm font-medium text-gray-400 min-w-[2rem] text-center">
-                  {fontSize}
-                </span>
-              </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    className="px-2 py-0.5 bg-gray-700 rounded text-base font-medium text-gray-200 hover:bg-gray-600 hover:cursor-pointer"
+                    onClick={() => handleFontSizeChange(Math.max(12, fontSize - 1))}
+                    aria-label="Decrease font size"
+                  >
+                    −
+                  </button>
+                  <span className="text-md font-medium text-gray-400 min-w-[2rem] text-center">
+                    {fontSize}
+                  </span>
+                  <button
+                    className="px-2 py-0.5 bg-gray-700 rounded text-base font-medium text-gray-200 hover:bg-gray-600 hover:cursor-pointer"
+                    onClick={() => handleFontSizeChange(Math.min(24, fontSize + 1))}
+                    aria-label="Increase font size"
+                  >
+                    +
+                  </button>
+                </div>
             </div>
 
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleRefresh}
-              className="p-2 bg-[#1e1e2e] hover:bg-[#2a2a3a] rounded-lg ring-1 ring-white/5 transition-colors"
+              className="p-2 bg-[#1e1e2e] hover:bg-[#2a2a3a] rounded-lg ring-1 ring-white/5 transition-colors hover:cursor-pointer"
               aria-label="Reset to default code"
             >
               <RotateCcwIcon className="size-4 text-gray-400" />
@@ -96,11 +111,15 @@ function EditorPanel() {
               whileTap={{ scale: 0.98 }}
               onClick={() => setIsShareDialogOpen(true)}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg overflow-hidden bg-gradient-to-r
-               from-blue-500 to-blue-600 opacity-90 hover:opacity-100 transition-opacity"
+               from-blue-500 to-blue-600 opacity-90 hover:opacity-100 transition-opacity hover:cursor-pointer"
             >
-              <ShareIcon className="size-4 text-white" />
-              <span className="text-sm font-medium text-white ">Share</span>
+              <ShareIcon className="size-4 text-white hover:cursor-pointer" />
+              {/* <span className="text-sm font-medium text-white "></span> */}
             </motion.button>
+
+            <SignedIn>
+              <RunButton />
+            </SignedIn>
           </div>
         </div>
 
@@ -141,7 +160,9 @@ function EditorPanel() {
           {!clerk.loaded && <EditorPanelSkeleton />}
         </div>
       </div>
-      {isShareDialogOpen && <ShareSnippetDialog onClose={() => setIsShareDialogOpen(false)} />}
+      {isShareDialogOpen && (
+        <ShareSnippetDialog onClose={() => setIsShareDialogOpen(false)} />
+      )}
     </div>
   );
 }

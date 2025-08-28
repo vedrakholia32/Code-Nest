@@ -47,6 +47,7 @@ export interface CodeEditorState {
   editor: editor.IStandaloneCodeEditor | null;
   executionResult: ExecutionResult | null;
 
+  loadSavedState: () => void;
   setEditor: (editor: editor.IStandaloneCodeEditor) => void;
   getCode: () => string;
   setLanguage: (language: string) => void;

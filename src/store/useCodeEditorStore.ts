@@ -3,26 +3,16 @@ import { LANGUAGE_CONFIG } from "@/app/(root)/_constants";
 import { create } from "zustand";
 import { editor } from "monaco-editor";
 
+const defaultState = {
+  language: "javascript",
+  fontSize: 16,
+  theme: "vs-dark",
+};
+
 const getInitialState = () => {
-  // if we're on the server, return default values
-  if (typeof window === "undefined") {
-    return {
-      language: "javascript",
-      fontSize: 16,
-      theme: "vs-dark",
-    };
-  }
-
-  // if we're on the client, return values from local storage bc localStorage is a browser API.
-  const savedLanguage = localStorage.getItem("editor-language") || "javascript";
-  const savedTheme = localStorage.getItem("editor-theme") || "vs-dark";
-  const savedFontSize = localStorage.getItem("editor-font-size") || 16;
-
-  return {
-    language: savedLanguage,
-    theme: savedTheme,
-    fontSize: Number(savedFontSize),
-  };
+  // Always return default values during initialization
+  // We'll load from localStorage after mount
+  return defaultState;
 };
 
 export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
@@ -37,6 +27,18 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
     executionResult: null,
 
     getCode: () => get().editor?.getValue() || "",
+
+    loadSavedState: () => {
+      if (typeof window === "undefined") return;
+      
+      const savedLanguage = localStorage.getItem("editor-language");
+      const savedTheme = localStorage.getItem("editor-theme");
+      const savedFontSize = localStorage.getItem("editor-font-size");
+
+      if (savedLanguage) set({ language: savedLanguage });
+      if (savedTheme) set({ theme: savedTheme });
+      if (savedFontSize) set({ fontSize: Number(savedFontSize) });
+    },
 
     setEditor: (editor: editor.IStandaloneCodeEditor) => {
       const savedCode = localStorage.getItem(`editor-code-${get().language}`);
