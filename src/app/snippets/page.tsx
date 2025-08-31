@@ -216,7 +216,7 @@ function SnippetsPage() {
                     setSelectedLanguage(null);
                   }}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-[#262637] text-gray-300 hover:text-white rounded-lg 
-                    transition-colors"
+                    transition-colors hover:cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                   Clear all filters

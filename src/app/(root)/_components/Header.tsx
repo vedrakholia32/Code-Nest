@@ -66,7 +66,7 @@ async function Header() {
                 className="text-sm font-medium relative z-10 group-hover:text-white
                  transition-colors"
               >
-                Snippets
+                Code Library
               </span>
             </Link>
           </nav>
@@ -91,8 +91,6 @@ async function Header() {
               </span>
             </Link>
           )}
-
-          
 
           <div className="pl-3 border-l border-gray-800">
             <HeaderProfileBtn />

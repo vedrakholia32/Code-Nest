@@ -87,7 +87,7 @@ function SnippetCard({ snippet }: { snippet: Snippet }) {
                     <button
                       onClick={handleDelete}
                       disabled={isDeleting}
-                      className={`group flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all duration-200
+                      className={`group flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all duration-200 
                                   ${
                                     isDeleting
                                       ? "bg-red-500/20 text-red-400 cursor-not-allowed"
@@ -98,7 +98,7 @@ function SnippetCard({ snippet }: { snippet: Snippet }) {
                       {isDeleting ? (
                         <div className="size-3.5 border-2 border-red-400/30 border-t-red-400 rounded-full animate-spin hover:cursor-pointer" />
                       ) : (
-                        <Trash2 className="size-3.5" />
+                        <Trash2 className="size-3.5 hover:cursor-pointer" />
                       )}
                     </button>
                   </div>

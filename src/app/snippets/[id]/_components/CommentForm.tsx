@@ -91,8 +91,8 @@ function CommentForm({ isSubmitting, onSubmit }: CommentFormProps) {
               </>
             ) : (
               <>
-                <SendIcon className="w-4 h-4" />
-                <span>Comment</span>
+                <SendIcon className="w-4 h-4 hover:cursor-pointer" />
+                <span className="hover:cursor-pointer">Comment</span>
               </>
             )}
           </button>

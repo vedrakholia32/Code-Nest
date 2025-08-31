@@ -37,14 +37,14 @@ function LanguageSelector({ hasAccess }: { hasAccess: boolean }) {
   if (!mounted) return null;
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative hover:cursor-pointer" ref={dropdownRef}>
       <motion.button
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         onClick={() => setIsOpen(!isOpen)}
         className={`group relative flex items-center gap-3 px-4 py-2.5 bg-[#1e1e2e]/80 
       rounded-lg transition-all 
-       duration-200 border border-gray-800/50 hover:border-gray-700
+       duration-200 border border-gray-800/50 hover:border-gray-700 hover:cursor-pointer
        ${!hasAccess && language !== "javascript" ? "opacity-50 cursor-not-allowed" : ""}`}
       >
         {/* Decoration */}
@@ -88,7 +88,7 @@ function LanguageSelector({ hasAccess }: { hasAccess: boolean }) {
               <p className="text-xs font-medium text-gray-400">Select Language</p>
             </div>
 
-            <div className="max-h-[280px] overflow-y-auto overflow-x-hidden">
+            <div className="max-h-[280px] overflow-y-auto overflow-x-hidden hover:cursor-pointer">
               {Object.values(LANGUAGE_CONFIG).map((lang, index) => {
                 const isLocked = !hasAccess && lang.id !== "javascript";
 
@@ -102,7 +102,7 @@ function LanguageSelector({ hasAccess }: { hasAccess: boolean }) {
                   >
                     <button
                       className={`
-                      relative w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200
+                      relative w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 hover:cursor-pointer
                       ${language === lang.id ? "bg-blue-500/10 text-blue-400" : "text-gray-300"}
                       ${isLocked ? "opacity-50" : "hover:bg-[#262637]"}
                     `}

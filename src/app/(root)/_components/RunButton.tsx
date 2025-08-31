@@ -53,10 +53,11 @@ function RunButton() {
         group relative inline-flex items-center gap-2.5 px-5 py-2
         disabled:cursor-not-allowed
         focus:outline-none
+        hover:cursor-pointer
       `}
     >
       {/* bg wit gradient */}
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl opacity-100 transition-opacity group-hover:opacity-90" />
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl opacity-100 transition-opacity group-hover:opacity-90 hover:cursor-pointer" />
 
       <div className="relative flex items-center gap-2.5">
         {isRunning ? (
@@ -69,10 +70,10 @@ function RunButton() {
           </>
         ) : (
           <>
-            <div className="relative flex items-center justify-center w-4 h-4">
+            <div className="relative flex items-center justify-center w-4 h-4 hover:cursor-pointer">
               <Play className="w-4 h-4 text-white/90 transition-transform group-hover:scale-110 group-hover:text-white" />
             </div>
-            <span className="text-sm font-medium text-white/90 group-hover:text-white">
+            <span className="text-sm font-medium text-white/90 group-hover:text-white hover:cursor-pointer">
               Run Code
             </span>
           </>

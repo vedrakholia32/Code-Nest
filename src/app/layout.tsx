@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import ConvexClientProvider from "@/comonents/providers/ConvexClientProvider";
 import Footer from "@/comonents/Footer";
 import { Toaster } from "react-hot-toast";
+import DesktopOnly from "@/DesktopOnly/DesktopOnly";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,10 +31,21 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gradient-to-b from-gray-900 to-gray-950`}
         >
-          <ConvexClientProvider>{children}</ConvexClientProvider>
-          <Footer />
+          <ConvexClientProvider>
+            {/* Show desktop-only message on mobile */}
+            <div className="block md:hidden h-screen">
+              <DesktopOnly />
+            </div>
+            {/* Show main content only on desktop */}
+            <div className="hidden md:block">
+              {children}
+            </div>
+          </ConvexClientProvider>
+          <div className="hidden md:block">
+            <Footer />
+          </div>
           <Toaster />
         </body>
       </html>
