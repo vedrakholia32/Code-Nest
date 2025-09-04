@@ -20,13 +20,38 @@ export const syncUser = mutation({
         name: args.name,
         isPro: false,
       });
+    } else {
+      // Update existing user data while preserving isPro status
+      await ctx.db.patch(existingUser._id, {
+        email: args.email,
+        name: args.name,
+      });
+    }
+  },
+});
+
+export const updateProStatus = mutation({
+  args: {
+    userId: v.string(),
+    isPro: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("userId"), args.userId))
+      .first();
+
+    if (user) {
+      await ctx.db.patch(user._id, {
+        isPro: args.isPro,
+        proSince: args.isPro ? Date.now() : undefined,
+      });
     }
   },
 });
 
 export const getUser = query({
   args: { userId: v.string() },
-
   handler: async (ctx, args) => {
     if (!args.userId) return null;
 
@@ -39,31 +64,5 @@ export const getUser = query({
     if (!user) return null;
 
     return user;
-  },
-});
-
-export const upgradeToPro = mutation({
-  args: {
-    email: v.string(),
-    lemonSqueezyCustomerId: v.string(),
-    lemonSqueezyOrderId: v.string(),
-    amount: v.number(),
-  },
-  handler: async (ctx, args) => {
-    const user = await ctx.db
-      .query("users")
-      .filter((q) => q.eq(q.field("email"), args.email))
-      .first();
-
-    if (!user) throw new Error("User not found");
-
-    await ctx.db.patch(user._id, {
-      isPro: true,
-      proSince: Date.now(),
-      lemonSqueezyCustomerId: args.lemonSqueezyCustomerId,
-      lemonSqueezyOrderId: args.lemonSqueezyOrderId,
-    });
-
-    return { success: true };
   },
 });

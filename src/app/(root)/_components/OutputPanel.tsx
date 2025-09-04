@@ -8,82 +8,58 @@ import RunningCodeSkeleton from "./RunningCodeSkeleton";
 function OutputPanel() {
   const { output, error, isRunning } = useCodeEditorStore();
   const [isCopied, setIsCopied] = useState(false);
-
   const hasContent = error || output;
 
   const handleCopy = async () => {
     if (!hasContent) return;
     await navigator.clipboard.writeText(error || output);
     setIsCopied(true);
-
     setTimeout(() => setIsCopied(false), 2000);
   };
 
   return (
-    <div className="relative bg-[#181825] rounded-xl p-4 ring-1 ring-gray-800/50">
+    <div className="relative h-[calc(100vh-80px)] min-h-[600px] bg-[#181825] p-6 border border-[#232334] shadow-lg">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="flex items-center justify-center w-6 h-6 rounded-lg bg-[#1e1e2e] ring-1 ring-gray-800/50">
-            <Terminal className="w-4 h-4 text-blue-400" />
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#232334]">
+            <Terminal className="w-5 h-5 text-blue-400" />
           </div>
-          <span className="text-sm font-medium text-gray-300">Output</span>
+          <span className="text-base font-semibold text-[#b3b3b3]">Output</span>
         </div>
-
         {hasContent && (
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-gray-400 hover:text-gray-300 bg-[#1e1e2e] 
-            rounded-lg ring-1 ring-gray-800/50 hover:ring-gray-700/50 transition-all"
+            className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#1e1e2e] text-[#b3b3b3] rounded-md hover:bg-[#2a2a3a] transition-colors"
           >
             {isCopied ? (
-              <>
-                <CheckCircle className="w-3.5 h-3.5" />
-                Copied!
-              </>
+              <CheckCircle className="w-4 h-4 text-green-500" />
             ) : (
-              <>
-                <Copy className="w-3.5 h-3.5" />
-                Copy
-              </>
+              <Copy className="w-4 h-4" />
             )}
+            <span className="text-sm font-medium">{isCopied ? "Copied" : "Copy"}</span>
           </button>
         )}
       </div>
 
-      {/* Output Area */}
-      <div className="relative">
-        <div
-          className="relative bg-[#1e1e2e]/50 backdrop-blur-sm border border-[#313244] 
-        rounded-xl p-4 h-[600px] overflow-auto font-mono text-sm"
-        >
-          {isRunning ? (
-            <RunningCodeSkeleton />
-          ) : error ? (
-            <div className="flex items-start gap-3 text-red-400">
-              <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-1" />
-              <div className="space-y-1">
-                <div className="font-medium">Execution Error</div>
-                <pre className="whitespace-pre-wrap text-red-400/80">{error}</pre>
-              </div>
-            </div>
-          ) : output ? (
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-emerald-400 mb-3">
-                <CheckCircle className="w-5 h-5" />
-                <span className="font-medium">Execution Successful</span>
-              </div>
-              <pre className="whitespace-pre-wrap text-gray-300">{output}</pre>
-            </div>
-          ) : (
-            <div className="h-full flex flex-col items-center justify-center text-gray-500">
-              <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gray-800/50 ring-1 ring-gray-700/50 mb-4">
-                <Clock className="w-6 h-6" />
-              </div>
-              <p className="text-center">Run your code to see the output here...</p>
-            </div>
-          )}
-        </div>
+      {/* Output or Placeholder */}
+      <div className="relative min-h-[400px] bg-[#232334] rounded-xl">
+        {isRunning ? (
+          <RunningCodeSkeleton />
+        ) : hasContent ? (
+          <pre className="w-full text-sm text-gray-200 whitespace-pre-wrap break-words p-4">
+            {error ? (
+              <span className="text-red-400">{error}</span>
+            ) : (
+              output
+            )}
+          </pre>
+        ) : (
+          <div className="flex items-center justify-center w-full h-full py-16">
+            <Terminal className="w-10 h-10 text-gray-600 mb-4" />
+            <span className="text-lg text-gray-500">Run your code to see the output here</span>
+          </div>
+        )}
       </div>
     </div>
   );

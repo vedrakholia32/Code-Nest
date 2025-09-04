@@ -34,17 +34,20 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gradient-to-b from-gray-900 to-gray-950`}
         >
           <ConvexClientProvider>
+
             {/* Show desktop-only message on mobile */}
             <div className="block md:hidden h-screen">
               <DesktopOnly />
             </div>
+
             {/* Show main content only on desktop */}
             <div className="hidden md:block">
               {children}
             </div>
+            
           </ConvexClientProvider>
           <div className="hidden md:block">
-            <Footer />
+            {/* <Footer /> */}
           </div>
           <Toaster />
         </body>

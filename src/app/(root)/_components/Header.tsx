@@ -1,103 +1,65 @@
-import { currentUser } from "@clerk/nextjs/server";
-import { ConvexHttpClient } from "convex/browser";
-import { api } from "../../../../convex/_generated/api";
+"use client";
+import { Sparkles } from "lucide-react";
 import Link from "next/link";
-import { Blocks, Code2, Sparkles } from "lucide-react";
-import { SignedIn } from "@clerk/nextjs";
+import Image from "next/image";
 import ThemeSelector from "./ThemeSelector";
 import LanguageSelector from "./LanguageSelector";
-import RunButton from "./RunButton";
 import HeaderProfileBtn from "./HeaderProfileBtn";
 
-async function Header() {
-  const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-  const user = await currentUser();
-
-  const convexUser = await convex.query(api.users.getUser, {
-    userId: user?.id || "",
-  });
-
+function Header({ isPro = false }: { isPro?: boolean }) {
   return (
-    <div className="relative z-10">
-      <div
-        className="flex items-center lg:justify-between justify-center 
-        bg-[#0a0a0f]/80 backdrop-blur-xl p-6 mb-4 rounded-lg"
-      >
-        <div className="hidden lg:flex items-center gap-8">
+    <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-[#181825]/95 border-b border-[#232334] shadow-lg">
+      <div className="flex items-center justify-between px-6 py-3">
+        <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-3 group relative">
-            {/* Logo hover effect */}
-
-            <div
-              className="absolute -inset-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg opacity-0 
-                group-hover:opacity-100 transition-all duration-500 blur-xl"
-            />
-
-            {/* Logo */}
-            <div
-              className="relative bg-gradient-to-br from-[#1a1a2e] to-[#0a0a0f] p-2 rounded-xl ring-1
-              ring-white/10 group-hover:ring-white/20 transition-all"
-            >
-              <Blocks className="size-6 text-blue-400 transform -rotate-6 group-hover:rotate-0 transition-transform duration-500" />
+            <div className="relative w-9 h-9">
+              <Image
+                src="/logo.png"
+                alt="CodeNest Logo"
+                width={36}
+                height={36}
+                className="object-contain rounded-2xl transition-transform duration-200 group-hover:scale-105"
+                priority
+                draggable={false}
+              />
+              <div className="absolute inset-0 bg-blue-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
-
             <div className="flex flex-col">
-              <span className="block text-lg font-semibold bg-gradient-to-r from-blue-400 via-blue-300 to-purple-400 text-transparent bg-clip-text">
+              <span className="block text-lg font-bold text-[#b3b3b3] group-hover:text-[#e0e0e0] transition-colors duration-300">
                 CodeNest
-              </span>
-              <span className="block text-xs text-blue-400/60 font-medium">
-                Interactive Code Editor
               </span>
             </div>
           </Link>
-
-          {/* Navigation */}
-          <nav className="flex items-center space-x-1">
-            <Link
-              href="/snippets"
-              className="relative group flex items-center gap-2 px-4 py-1.5 rounded-lg text-gray-300 bg-gray-800/50 
-                hover:bg-blue-500/10 border border-gray-800 hover:border-blue-500/50 transition-all duration-300 shadow-lg overflow-hidden"
-            >
-              <div
-                className="absolute inset-0 bg-gradient-to-r from-blue-500/10 
-                to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
-              />
-              <Code2 className="w-4 h-4 relative z-10 group-hover:rotate-3 transition-transform" />
-              <span
-                className="text-sm font-medium relative z-10 group-hover:text-white
-                 transition-colors"
-              >
-                Code Library
-              </span>
-            </Link>
-          </nav>
         </div>
-
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-3">
+        <nav className="flex-1 flex justify-center">
+          <Link
+            href="/snippets"
+            className="px-4 py-1.5 rounded-md bg-[#1e1e2e] text-[#b3b3b3] border border-[#232334] hover:bg-[#2a2a3a] hover:border-[#343444] transition-all duration-200"
+          >
+            Code Library
+          </Link>
+        </nav>
+        <div className="flex items-center">
+          <div className="flex items-center gap-3 px-3 py-1.5 bg-[#1e1e2e] rounded-md mr-3">
             <ThemeSelector />
-            <LanguageSelector hasAccess={Boolean(convexUser?.isPro)} />
+            <div className="h-4 w-px bg-[#232334]" />
+            <LanguageSelector hasAccess={isPro} />
           </div>
-
-          {!convexUser?.isPro && (
+          {!isPro && (
             <Link
               href="/pricing"
-              className="flex items-center gap-2 px-4 py-1.5 rounded-lg border border-amber-500/20 hover:border-amber-500/40 bg-gradient-to-r from-amber-500/10 
-                to-orange-500/10 hover:from-amber-500/20 hover:to-orange-500/20 
-                transition-all duration-300"
+              className="group relative flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#1e1e2e] text-[#eabc60] border border-[#eabc60]/20 hover:bg-[#24232f] transition-all duration-200"
             >
-              <Sparkles className="w-4 h-4 text-amber-400 hover:text-amber-300" />
-              <span className="text-sm font-medium text-amber-400/90 hover:text-amber-300">
-                Pro
-              </span>
+              <Sparkles className="w-3.5 h-3.5 opacity-70 group-hover:opacity-100" />
+              <span className="text-sm font-medium">Pro</span>
+              <div className="absolute inset-0 rounded-md bg-gradient-to-r from-[#eabc60]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
             </Link>
           )}
 
-          <div className="pl-3 border-l border-gray-800">
-            <HeaderProfileBtn />
-          </div>
+          <HeaderProfileBtn />
         </div>
       </div>
-    </div>
+    </header>
   );
 }
 export default Header;
