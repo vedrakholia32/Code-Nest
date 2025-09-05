@@ -15,12 +15,16 @@ export default function DesktopOnly() {
         >
           <div className="relative">
             <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full" />
-            <Monitor className="w-16 h-16 mx-auto text-blue-500 relative z-10" />
-          </div>
-          
-          <h1 className="text-2xl md:text-3xl font-bold text-white">
-            Desktop View Required
-          </h1>
+            <img
+              src="/logo.png"
+              alt="CodeNest Logo"
+              className="mx-auto mb-4 w-16 h-16 rounded-full shadow-lg"
+            />
+            </div>
+
+            <h1 className="text-2xl md:text-3xl font-bold text-white">
+              Desktop View Required
+            </h1>
           
           <p className="text-gray-400">
             CodeNest is optimized for desktop use. Please switch to a desktop device 

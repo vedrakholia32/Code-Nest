@@ -35,16 +35,20 @@ function NavigationHeader() {
               </div>
             </Link>
 
-            {/* snippets Link */}
+            {/* Home Link */}
             <Link
               href="/"
-              className=" text-blue-300 relative rounded-2xl group flex items-center gap-2 px-4 py-1.5 shadow-lg overflow-hidden transition-all duration-300"
+              className="relative rounded-xl group flex items-center gap-2 px-4 py-1.5 
+                border border-[#313244]/50 hover:border-[#414155] 
+                bg-[#1e1e2e]/80 hover:bg-[#1e1e2e] 
+                transition-all duration-300"
             >
               <div
                 className="absolute inset-0 bg-gradient-to-r from-blue-500/10 
-              to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
               />
-              <span className="text-sm font-medium relative z-10 transition-colors">
+              <span className="text-sm font-medium text-gray-400 group-hover:text-blue-400 
+                relative z-10 transition-colors">
                 Home
               </span>
             </Link>

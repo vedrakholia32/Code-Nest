@@ -13,9 +13,9 @@ interface ResizablePanelProps {
 export default function ResizablePanel({
   leftPanel,
   rightPanel,
-  initialRatio = 0.7, // 70-30 split by default
-  minLeftWidth = 30,
-  minRightWidth = 30,
+  initialRatio = 0.5, // 50-50 split by default
+  minLeftWidth = 40,
+  minRightWidth = 40,
 }: ResizablePanelProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -69,18 +69,18 @@ export default function ResizablePanel({
         cursor: isDragging ? "col-resize" : "auto",
       }}
     >
-      <div style={{ width: `${ratio * 100}%` }}>{leftPanel}</div>
+      <div className="overflow-hidden" style={{ width: `${ratio * 100}%` }}>{leftPanel}</div>
       <div
-        className="absolute h-full cursor-col-resize transition-colors flex items-center justify-center"
+        className="absolute h-full cursor-col-resize transition-colors flex items-center justify-center hover:bg-blue-500/20"
         style={{
-          left: `calc(${ratio * 100}% - 1px)`,
-          width: '6px',
+          left: `calc(${ratio * 100}% - 3px)`,
+          width: '10px',
         }}
         onMouseDown={handleMouseDown}
       >
-        <div className={`h-full w-[2px] ${isDragging ? 'bg-blue-400' : 'bg-black'} transition-colors`} />
+        <div className={`h-full w-[3px] ${isDragging ? 'bg-blue-400' : 'bg-[#1e1e2e]'} shadow-[0_0_10px_rgba(0,0,0,0.5)] rounded-full transition-colors`} />
       </div>
-      <div style={{ width: `${(1 - ratio) * 100}%`, marginLeft: '3px' }}>{rightPanel}</div>
+      <div className="overflow-hidden" style={{ width: `${(1 - ratio) * 100}%` }}>{rightPanel}</div>
     </div>
   );
 }

@@ -20,9 +20,9 @@ export default function Home() {
         <ResizablePanel
           leftPanel={<EditorPanel />}
           rightPanel={<OutputPanel />}
-          initialRatio={0.7}
-          minLeftWidth={30}
-          minRightWidth={20}
+          initialRatio={0.75}
+          minLeftWidth={45}
+          minRightWidth={25}
         />
       </div>
     </div>

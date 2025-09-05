@@ -51,37 +51,42 @@ function EditorPanel() {
 
   return (
     <div className="relative h-[calc(100vh-80px)] min-h-[600px] flex flex-col">
-      <div className="flex-1 flex flex-col justify-stretch bg-[#181825] backdrop-blur rounded-none border-r border-[#232334] shadow-lg">
+      <div className="flex-1 flex flex-col justify-stretch bg-[#181825] backdrop-blur rounded-none shadow-[8px_0_20px_rgba(0,0,0,0.5)] relative">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#232334]">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#232334]">
+          <div className="flex items-center gap-3 hover:cursor-pointer">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#232334] hover:cursor-pointer hover:bg-[#2a2a3a] transition-colors">
               <Image
-                src={'/' + language + '.png'}
+                src={"/" + language + ".png"}
                 alt="Logo"
                 width={24}
                 height={24}
+                className="hover:cursor-pointer"
               />
             </div>
-            <div>
-              <h2 className="text-sm font-semibold text-[#b3b3b3]">Code Editor</h2>
+            <div className="hover:cursor-pointer">
+              <h2 className="text-sm font-semibold text-[#b3b3b3]">
+                Code Editor
+              </h2>
             </div>
           </div>
           <div className="flex items-center gap-3">
             {/* Font Size Controls */}
-            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#1e1e2e] rounded-md border border-[#232334] hover:border-[#343444] transition-colors group">
-              <TypeIcon className="w-4 h-4 text-[#b3b3b3] opacity-70 group-hover:opacity-100 transition-opacity" />
+            <div className="flex items-center gap-1.5 w-[120px] px-3 py-1.5 bg-[#1e1e2e] rounded-md border border-[#232334] hover:border-[#343444] transition-colors group">
+              <TypeIcon className="w-4.2 h-4.2 text-[#d6d6d6] opacity-70 group-hover:opacity-100 transition-opacity" />
               <div className="h-4 w-px bg-[#232334] mx-1" />
               <button
-                className="px-2 py-0.5 rounded-md hover:bg-[#2a2a3a] text-sm font-medium text-[#b3b3b3] transition-colors"
+                className="w-8 py-0.5 rounded-md hover:bg-[#2a2a3a] text-sm font-medium text-[#b3b3b3] transition-colors hover:cursor-pointer"
                 onClick={() => handleFontSizeChange(Math.max(12, fontSize - 1))}
                 aria-label="Decrease font size"
               >
                 −
               </button>
-              <span className="text-sm font-medium text-[#b3b3b3] min-w-[1.5rem] text-center select-none">{fontSize}</span>
+              <span className="text-sm font-medium text-[#b3b3b3] w-8 text-center select-none">
+                {fontSize}
+              </span>
               <button
-                className="px-2 py-0.5 rounded-md hover:bg-[#2a2a3a] text-sm font-medium text-[#b3b3b3] transition-colors"
+                className="w-8 py-0.5 rounded-md hover:bg-[#2a2a3a] text-sm font-medium text-[#b3b3b3] transition-colors hover:cursor-pointer"
                 onClick={() => handleFontSizeChange(Math.min(24, fontSize + 1))}
                 aria-label="Increase font size"
               >
@@ -93,19 +98,21 @@ function EditorPanel() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleRefresh}
-              className="p-2 bg-[#1e1e2e] hover:bg-[#2a2a3a] rounded-md transition-colors"
+              className="w-[120px] px-3 py-1.5 bg-[#1e1e2e] hover:bg-[#2a2a3a] rounded-md transition-colors inline-flex items-center justify-center hover:cursor-pointer"
               aria-label="Reset to default code"
             >
-              <RotateCcwIcon className="w-4 h-4 text-[#b3b3b3]" />
+              <RotateCcwIcon className="w-4 h-4 text-[#b3b3b3] mr-2" />
+              <span className="text-sm font-medium text-[#b3b3b3]">Reset</span>
             </motion.button>
             {/* Share Button */}
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setIsShareDialogOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#1e1e2e] text-[#b3b3b3] rounded-md hover:bg-[#2a2a3a] transition-colors"
+              className="w-[120px] px-3 py-1.5 bg-[#1e1e2e] hover:bg-[#2a2a3a] rounded-md transition-colors inline-flex items-center justify-center hover:cursor-pointer"
             >
-              <ShareIcon className="w-4 h-4" />
+              <ShareIcon className="w-4 h-4 mr-2" />
+              <span className="text-sm font-medium text-[#b3b3b3]">Share</span>
             </motion.button>
             <SignedIn>
               <RunButton />
