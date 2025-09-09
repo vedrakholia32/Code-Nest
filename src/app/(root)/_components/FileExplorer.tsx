@@ -4,13 +4,10 @@ import { ProjectFile, FileTreeItem } from "@/types";
 import Image from "next/image";
 import { LANGUAGE_CONFIG } from "../_constants";
 import { 
-  FileIcon, 
   FolderIcon, 
   FolderOpenIcon, 
   PlusIcon, 
-  MoreVertical,
   Play,
-  Copy,
   Trash2,
   Edit
 } from "lucide-react";
@@ -41,7 +38,6 @@ export default function FileExplorer({
 
   const createFile = useMutation(api.files.createFile);
   const deleteFile = useMutation(api.files.deleteFile);
-  const duplicateFile = useMutation(api.files.duplicateFile);
   const setEntryFile = useMutation(api.files.setEntryFile);
 
   const buildFileTree = (files: ProjectFile[]): FileTreeItem[] => {
@@ -109,14 +105,6 @@ export default function FileExplorer({
       await deleteFile({ fileId });
     } catch (error) {
       console.error("Error deleting file:", error);
-    }
-  };
-
-  const handleDuplicateFile = async (fileId: Id<"files">) => {
-    try {
-      await duplicateFile({ fileId });
-    } catch (error) {
-      console.error("Error duplicating file:", error);
     }
   };
 

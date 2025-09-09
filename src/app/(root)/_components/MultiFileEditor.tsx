@@ -59,7 +59,7 @@ export default function MultiFileEditor({ projectId, onRunResult }: MultiFileEdi
         setFileContents(prev => ({ ...prev, ...newContents }));
       }
     }
-  }, [files]);
+  }, [files, fileContents]);
 
   const handleFileSelect = (fileId: string) => {
     if (!openTabs.includes(fileId)) {
@@ -210,7 +210,6 @@ export default function MultiFileEditor({ projectId, onRunResult }: MultiFileEdi
             activeFile={activeFile || null}
             onRunFile={handleRunFile}
             isRunning={isRunning}
-            files={files || []}
             projectName={project?.name || "Untitled Project"}
           />
           

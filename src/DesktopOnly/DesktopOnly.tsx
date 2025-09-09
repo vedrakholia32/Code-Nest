@@ -1,6 +1,6 @@
 "use client";
 
-import { Monitor } from "lucide-react";
+
 import { motion } from "framer-motion";
 
 export default function DesktopOnly() {

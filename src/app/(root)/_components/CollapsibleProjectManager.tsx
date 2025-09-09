@@ -3,8 +3,8 @@ import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { useUser } from "@clerk/nextjs";
 import { api } from "../../../../convex/_generated/api";
-import { Project } from "@/types";
-import { Plus, FolderOpen, Globe, Lock, Calendar, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Id } from "../../../../convex/_generated/dataModel";
+import { Plus, Globe, Lock, Calendar, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { LANGUAGE_CONFIG } from "../_constants";
@@ -77,7 +77,7 @@ export default function ProjectManager({ onProjectSelect, selectedProjectId }: P
     if (!confirm("Are you sure you want to delete this project?")) return;
     
     try {
-      await deleteProject({ projectId: projectId as any });
+      await deleteProject({ projectId: projectId as Id<"projects"> });
       if (selectedProjectId === projectId) {
         onProjectSelect("");
       }

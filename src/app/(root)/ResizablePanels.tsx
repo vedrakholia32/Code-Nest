@@ -42,7 +42,7 @@ export default function ResizablePanels({ left, right }: ResizablePanelsProps) {
       window.removeEventListener("mousemove", move);
       window.removeEventListener("mouseup", up);
     };
-  }, [isDragging.current]);
+  }, []);
 
   return (
     <div ref={containerRef} className="flex w-full h-full relative select-none">

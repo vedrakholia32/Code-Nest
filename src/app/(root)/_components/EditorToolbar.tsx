@@ -15,9 +15,8 @@ export default function EditorToolbar({
   activeFile,
   onRunFile,
   isRunning,
-  files,
   projectName
-}: EditorToolbarProps) {
+}: Omit<EditorToolbarProps, 'files'>) {
   return (
     <div className="h-12 bg-[#262637] border-b border-[#313244] flex items-center justify-between px-4">
       <div className="flex items-center gap-4">

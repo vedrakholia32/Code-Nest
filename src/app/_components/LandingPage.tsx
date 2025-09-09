@@ -11,9 +11,7 @@ import {
   Zap, 
   FileText, 
   Globe, 
-  ArrowRight,
-  CheckCircle,
-  Star
+  ArrowRight
 } from "lucide-react";
 
 export default function LandingPage() {
