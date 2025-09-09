@@ -41,3 +41,51 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Clerk Dark Theme Overrides */
+.cl-userButtonPopoverCard,
+.cl-userButtonPopoverActions,
+.cl-userButtonPopoverActionButton,
+.cl-userButtonPopoverFooter,
+.cl-modal,
+.cl-modalContent,
+.cl-card {
+  background-color: #1e1e2e !important;
+  border-color: #313244 !important;
+  color: #e6edf3 !important;
+}
+
+/* Target all action buttons and their variants */
+.cl-userButtonPopoverActionButton,
+.cl-userButtonPopoverActionButton *,
+button[data-clerk-element="userButtonPopoverActionButton"],
+button[data-clerk-element="userButtonPopoverActionButton"] *,
+.cl-userButtonPopoverActions button,
+.cl-userButtonPopoverActions button *,
+.cl-userButtonPopoverActions > div,
+.cl-userButtonPopoverActions > div * {
+  background-color: transparent !important;
+  color: #e6edf3 !important;
+}
+
+.cl-userButtonPopoverActionButton:hover,
+.cl-userButtonPopoverActionButton:focus,
+button[data-clerk-element="userButtonPopoverActionButton"]:hover,
+.cl-userButtonPopoverActions button:hover {
+  background-color: #262637 !important;
+}
+
+.cl-userButtonPopoverActionButtonText,
+.cl-userButtonPopoverActionButtonIcon,
+.cl-userButtonPopoverActions span,
+.cl-userButtonPopoverActions svg {
+  color: #e6edf3 !important;
+}
+
+.cl-userButtonPopoverFooter a {
+  color: #7c3aed !important;
+}
+
+.cl-userButtonPopoverFooter a:hover {
+  color: #6d28d9 !important;
+}

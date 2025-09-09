@@ -20,6 +20,13 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Code Nest",
   description: "Share and Run Code Snippets",
+  icons: {
+    icon: [
+      { url: '/logo.png', sizes: '32x32', type: 'image/png' },
+      // { url: '/logo.jpg', sizes: 'any', type: 'image/jpeg' },
+    ],
+    apple: '/logo.png',
+  },
 };
 
 export default function RootLayout({
@@ -28,7 +35,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        variables: {
+          colorPrimary: "#7c3aed",
+          colorText: "#e6edf3",
+          colorBackground: "#1e1e2e",
+          colorInputBackground: "#262637",
+          colorInputText: "#e6edf3",
+        },
+        elements: {
+          card: "bg-[#1e1e2e] border border-[#313244]",
+          headerTitle: "text-[#e6edf3]",
+          headerSubtitle: "text-gray-400",
+          socialButtonsBlockButton: "bg-[#262637] border border-[#313244] hover:bg-[#2a2a3a]",
+          formButtonPrimary: "bg-[#7c3aed] hover:bg-[#6d28d9]",
+          footerActionLink: "text-[#7c3aed] hover:text-[#6d28d9]",
+          userButtonPopoverCard: "bg-[#1e1e2e] border border-[#313244]",
+          userButtonPopoverActionButton: "text-[#e6edf3] hover:bg-[#262637]",
+        },
+      }}
+    >
       <html lang="en" suppressHydrationWarning>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gradient-to-b from-gray-900 to-gray-950`}
