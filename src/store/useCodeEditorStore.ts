@@ -25,6 +25,11 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
     error: null,
     editor: null,
     executionResult: null,
+    
+    // Multi-file project support
+    currentProject: null,
+    activeFileId: null,
+    openTabs: [],
 
     getCode: () => get().editor?.getValue() || "",
 

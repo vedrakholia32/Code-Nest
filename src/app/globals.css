@@ -89,3 +89,51 @@ button[data-clerk-element="userButtonPopoverActionButton"]:hover,
 .cl-userButtonPopoverFooter a:hover {
   color: #6d28d9 !important;
 }
+
+/* Font Size Slider Styles */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-track {
+  background: #313244;
+  height: 8px;
+  border-radius: 4px;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #7c3aed;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  background: #6d28d9;
+}
+
+.slider::-moz-range-track {
+  background: #313244;
+  height: 8px;
+  border-radius: 4px;
+  border: none;
+}
+
+.slider::-moz-range-thumb {
+  background: #7c3aed;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+.slider::-moz-range-thumb:hover {
+  background: #6d28d9;
+}

@@ -9,6 +9,10 @@ export const saveExecution = mutation({
     // we could have either one of them, or both at the same time
     output: v.optional(v.string()),
     error: v.optional(v.string()),
+    // New fields for multi-file support
+    projectId: v.optional(v.id("projects")),
+    fileName: v.optional(v.string()),
+    executionType: v.optional(v.string()), // "single-file" or "multi-file"
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();

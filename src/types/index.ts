@@ -37,6 +37,38 @@ export interface ExecutionResult {
   error: string | null;
 }
 
+// Multi-file project types
+export interface ProjectFile {
+  _id: Id<"files">;
+  projectId: Id<"projects">;
+  name: string;
+  content: string;
+  language: string;
+  path: string;
+  isEntry: boolean;
+  _creationTime: number;
+}
+
+export interface Project {
+  _id: Id<"projects">;
+  name: string;
+  description?: string;
+  userId: string;
+  userName: string;
+  isPublic: boolean;
+  language: string;
+  _creationTime: number;
+}
+
+export interface FileTreeItem {
+  id: string;
+  name: string;
+  type: 'file' | 'folder';
+  children?: FileTreeItem[];
+  path: string;
+  fileId?: Id<"files">;
+}
+
 export interface CodeEditorState {
   language: string;
   output: string;
@@ -46,6 +78,11 @@ export interface CodeEditorState {
   fontSize: number;
   editor: editor.IStandaloneCodeEditor | null;
   executionResult: ExecutionResult | null;
+
+  // Multi-file support
+  currentProject: Project | null;
+  activeFileId: string | null;
+  openTabs: string[];
 
   loadSavedState: () => void;
   setEditor: (editor: editor.IStandaloneCodeEditor) => void;

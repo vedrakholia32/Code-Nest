@@ -5,9 +5,23 @@ import { AlertTriangle, CheckCircle, Clock, Copy, Terminal } from "lucide-react"
 import { useState } from "react";
 import RunningCodeSkeleton from "./RunningCodeSkeleton";
 
-function OutputPanel() {
-  const { output, error, isRunning } = useCodeEditorStore();
+interface OutputPanelProps {
+  output?: string;
+  error?: string | null;
+  isProjectMode?: boolean;
+}
+
+function OutputPanel({ 
+  output: propOutput, 
+  error: propError, 
+  isProjectMode = false 
+}: OutputPanelProps) {
+  const { output: storeOutput, error: storeError, isRunning } = useCodeEditorStore();
   const [isCopied, setIsCopied] = useState(false);
+  
+  // Use props if in project mode, otherwise use store
+  const output = isProjectMode ? propOutput || "" : storeOutput;
+  const error = isProjectMode ? propError : storeError;
   const hasContent = error || output;
 
   const handleCopy = async () => {

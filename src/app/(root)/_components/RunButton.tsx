@@ -24,6 +24,9 @@ function RunButton() {
         code: result.code,
         output: result.output || undefined,
         error: result.error || undefined,
+        projectId: undefined, // Single file execution, no project
+        fileName: `main.${language}`, // Default filename for single file
+        executionType: "single-file",
       });
     }
   };

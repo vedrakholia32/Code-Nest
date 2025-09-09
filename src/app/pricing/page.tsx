@@ -1,6 +1,9 @@
-import { currentUser } from "@clerk/nextjs/server";
-import { ConvexHttpClient } from "convex/browser";
+"use client";
+
+import { useUser } from "@clerk/nextjs";
+import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import AuthWrapper from "../_components/AuthWrapper";
 import ProPlanView from "./_components/ProPlanView";
 import NavigationHeader from "@/comonents/NavigationHeader";
 import { ENTERPRISE_FEATURES, FEATURES } from "./_constants";
@@ -11,10 +14,9 @@ import { SignedIn, SignedOut } from "@clerk/nextjs";
 import UpgradeButton from "./_components/UpgradeButton";
 import LoginButton from "@/comonents/LoginButton";
 
-async function PricingPage() {
-  const user = await currentUser();
-  const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-  const convexUser = await convex.query(api.users.getUser, {
+function PricingPageContent() {
+  const { user } = useUser();
+  const convexUser = useQuery(api.users.getUser, {
     userId: user?.id || "",
   });
 
@@ -140,4 +142,11 @@ async function PricingPage() {
     </div>
   );
 }
-export default PricingPage;
+
+export default function PricingPage() {
+  return (
+    <AuthWrapper>
+      <PricingPageContent />
+    </AuthWrapper>
+  );
+}

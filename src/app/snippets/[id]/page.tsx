@@ -4,6 +4,7 @@ import { useQuery } from "convex/react";
 import { useParams } from "next/navigation";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
+import AuthWrapper from "../../_components/AuthWrapper";
 import SnippetLoadingSkeleton from "./_components/SnippetLoadingSkeleton";
 import NavigationHeader from "@/comonents/NavigationHeader";
 import { Clock, Code, MessageSquare, User } from "lucide-react";
@@ -12,7 +13,7 @@ import { defineMonacoThemes, LANGUAGE_CONFIG } from "@/app/(root)/_constants";
 import CopyButton from "./_components/CopyButton";
 import Comments from "./_components/Comments";
 
-function SnippetDetailPage() {
+function SnippetDetailPageContent() {
   const snippetId = useParams().id;
 
   const snippet = useQuery(api.snippets.getSnippetById, {
@@ -104,4 +105,11 @@ function SnippetDetailPage() {
     </div>
   );
 }
-export default SnippetDetailPage;
+
+export default function SnippetDetailPage() {
+  return (
+    <AuthWrapper>
+      <SnippetDetailPageContent />
+    </AuthWrapper>
+  );
+}

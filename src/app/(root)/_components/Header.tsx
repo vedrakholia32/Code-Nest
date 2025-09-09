@@ -5,6 +5,7 @@ import Image from "next/image";
 import ThemeSelector from "./ThemeSelector";
 import LanguageSelector from "./LanguageSelector";
 import HeaderProfileBtn from "./HeaderProfileBtn";
+import FontSizeControl from "./FontSizeControl";
 
 function Header({ isPro = false }: { isPro?: boolean }) {
   return (
@@ -44,6 +45,8 @@ function Header({ isPro = false }: { isPro?: boolean }) {
             <ThemeSelector />
             <div className="h-4 w-px bg-[#232334]" />
             <LanguageSelector hasAccess={isPro} />
+            <div className="h-4 w-px bg-[#232334]" />
+            <FontSizeControl />
           </div>
           {!isPro && (
             <Link

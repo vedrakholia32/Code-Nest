@@ -4,14 +4,13 @@ import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useState } from "react";
 import SnippetsPageSkeleton from "./_components/SnippetsPageSkeleton";
-// import NavigationHeader from "@/components/NavigationHeader";
-
+import AuthWrapper from "../_components/AuthWrapper";
 import { AnimatePresence, motion } from "framer-motion";
 import { BookOpen, Code, Grid, Layers, Search, Tag, X } from "lucide-react";
 import NavigationHeader from "@/comonents/NavigationHeader";
 import SnippetCard from "./_components/SnippetCard";
 
-function SnippetsPage() {
+function SnippetsPageContent() {
   const snippets = useQuery(api.snippets.getSnippets);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
@@ -231,4 +230,11 @@ function SnippetsPage() {
     </div>
   );
 }
-export default SnippetsPage;
+
+export default function SnippetsPage() {
+  return (
+    <AuthWrapper>
+      <SnippetsPageContent />
+    </AuthWrapper>
+  );
+}

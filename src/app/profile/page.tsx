@@ -4,6 +4,7 @@ import { usePaginatedQuery, useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { api } from "../../../convex/_generated/api";
+import AuthWrapper from "../_components/AuthWrapper";
 import NavigationHeader from "@/comonents/NavigationHeader";
 import ProfileHeader from "./_components/ProfileHeader";
 import ProfileHeaderSkeleton from "./_components/ProfileHeaderSkeleton";
@@ -34,7 +35,7 @@ const TABS = [
   },
 ];
 
-function ProfilePage() {
+function ProfilePageContent() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<"executions" | "starred">(
@@ -66,7 +67,10 @@ function ProfilePage() {
     if (executionStatus === "CanLoadMore") loadMore(5);
   };
 
-  if (!user && isLoaded) return router.push("/");
+  if (!user && isLoaded) {
+    router.push("/");
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-[#0a0a0f]">
@@ -156,7 +160,7 @@ function ProfilePage() {
                             />
                           </div>
                           <div className="space-y-1">
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 flex-wrap">
                               <span className="text-sm font-medium text-white">
                                 {execution.language.toUpperCase()}
                               </span>
@@ -166,8 +170,16 @@ function ProfilePage() {
                                   execution._creationTime
                                 ).toLocaleString()}
                               </span>
+                              {execution.fileName && (
+                                <>
+                                  <span className="text-xs text-gray-400">•</span>
+                                  <span className="text-xs text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded">
+                                    {execution.fileName}
+                                  </span>
+                                </>
+                              )}
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 flex-wrap">
                               <span
                                 className={`text-xs px-2 py-0.5 rounded-full ${
                                   execution.error
@@ -177,6 +189,16 @@ function ProfilePage() {
                               >
                                 {execution.error ? "Error" : "Success"}
                               </span>
+                              {execution.executionType && (
+                                <span className="text-xs px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-400">
+                                  {execution.executionType === "single-file" ? "Single File" : "Multi File"}
+                                </span>
+                              )}
+                              {execution.projectId && (
+                                <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400">
+                                  Project
+                                </span>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -327,4 +349,11 @@ function ProfilePage() {
     </div>
   );
 }
-export default ProfilePage;
+
+export default function ProfilePage() {
+  return (
+    <AuthWrapper>
+      <ProfilePageContent />
+    </AuthWrapper>
+  );
+}
