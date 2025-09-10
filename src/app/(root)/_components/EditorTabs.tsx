@@ -1,6 +1,7 @@
 "use client";
 import { ProjectFile } from "@/types";
 import { X, Circle } from "lucide-react";
+import Image from "next/image";
 
 interface EditorTabsProps {
   openTabs: ProjectFile[];
@@ -15,23 +16,36 @@ export default function EditorTabs({
   onTabSelect,
   onTabClose
 }: EditorTabsProps) {
-  const getFileIcon = (fileName: string) => {
+const getFileIcon = (fileName: string) => {
     const extension = fileName.split('.').pop()?.toLowerCase();
     const iconMap: Record<string, string> = {
-      js: "🟨",
-      ts: "🔷", 
-      py: "🐍",
-      java: "☕",
-      cpp: "⚡",
-      c: "⚡",
-      cs: "🔵",
-      go: "🐹",
-      rs: "🦀",
-      php: "🐘",
-      rb: "💎",
-      swift: "🦉"
+        js: "/javascript.png",
+        jsx: "/javascript.png", 
+        ts: "/typescript.png",
+        tsx: "/typescript.png",
+        py: "/python.png",
+        java: "/java.png",
+        cpp: "/cpp.png",
+        cxx: "/cpp.png",
+        cc: "/cpp.png",
+        c: "/cpp.png",
+        cs: "/csharp.png",
+        go: "/go.png",
+        rs: "/rust.png",
+        rb: "/ruby.png",
+        swift: "/swift.png",
+        sh: "/bash.png"
     };
-    return iconMap[extension || ''] || "📄";
+    const iconSrc = iconMap[extension || ''] || "/logo.png";
+    return (
+        <Image
+            src={iconSrc}
+            alt={extension ? `${extension} file` : "file"}
+            width={16}
+            height={16}
+            className="w-4 h-4 inline-block align-middle"
+        />
+    );
   };
 
   if (openTabs.length === 0) {

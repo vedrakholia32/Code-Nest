@@ -7,9 +7,11 @@ import {
   FolderIcon, 
   FolderOpenIcon, 
   PlusIcon, 
-  Play,
   Trash2,
-  Edit
+  Edit,
+  Edit2,
+  Check,
+  X
 } from "lucide-react";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
@@ -35,10 +37,13 @@ export default function FileExplorer({
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(["root"]));
   const [showNewFileInput, setShowNewFileInput] = useState<string | null>(null);
   const [newFileName, setNewFileName] = useState("");
+  const [editingFileId, setEditingFileId] = useState<string | null>(null);
+  const [editingFileName, setEditingFileName] = useState("");
 
   const createFile = useMutation(api.files.createFile);
   const deleteFile = useMutation(api.files.deleteFile);
   const setEntryFile = useMutation(api.files.setEntryFile);
+  const renameFile = useMutation(api.files.renameFile);
 
   const buildFileTree = (files: ProjectFile[]): FileTreeItem[] => {
     const tree: FileTreeItem[] = [];
@@ -116,6 +121,46 @@ export default function FileExplorer({
     }
   };
 
+  const handleRenameFile = async (fileId: string) => {
+    const file = files.find(f => f._id === fileId);
+    if (!file || !editingFileName.trim()) return;
+
+    const oldName = file.name;
+    const newName = editingFileName.trim();
+    
+    if (oldName === newName) {
+      setEditingFileId(null);
+      return;
+    }
+
+    // Update the path to reflect the new name
+    const pathParts = file.path.split('/');
+    pathParts[pathParts.length - 1] = newName;
+    const newPath = pathParts.join('/');
+
+    try {
+      await renameFile({
+        fileId: fileId as Id<"files">,
+        name: newName,
+        path: newPath,
+      });
+      setEditingFileId(null);
+    } catch (error) {
+      console.error("Error renaming file:", error);
+      setEditingFileName(oldName); // Reset on error
+    }
+  };
+
+  const startRenaming = (fileId: string, fileName: string) => {
+    setEditingFileId(fileId);
+    setEditingFileName(fileName);
+  };
+
+  const cancelRenaming = () => {
+    setEditingFileId(null);
+    setEditingFileName("");
+  };
+
   const getFileIcon = (fileName: string) => {
     const extension = fileName.split('.').pop()?.toLowerCase();
     
@@ -184,51 +229,86 @@ export default function FileExplorer({
                 className="rounded"
               />
             )}
-            <span className="text-sm flex items-center gap-1">
-              {item.name}
-              {isEntry && <Play className="w-3 h-3 text-green-400" />}
-            </span>
+            {editingFileId === item.id && item.type === 'file' ? (
+              <input
+                type="text"
+                value={editingFileName}
+                onChange={(e) => setEditingFileName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleRenameFile(item.id);
+                  if (e.key === 'Escape') cancelRenaming();
+                }}
+                className="text-sm bg-[#1e1e2e] border border-[#414155] rounded px-1 py-0.5 text-white min-w-[80px]"
+                autoFocus
+                onClick={(e) => e.stopPropagation()}
+              />
+            ) : (
+              <span className="text-sm flex items-center gap-1">
+                {item.name}
+                {/* {isEntry && <Play className="w-3 h-3 text-green-400" />} */}
+              </span>
+            )}
           </div>
 
           {item.type === 'file' && file && (
             <div className="flex items-center gap-1">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onRunFile(file);
-                }}
-                disabled={isRunning}
-                className={`p-1 hover:bg-[#3a3a4a] rounded transition-colors ${
-                  isRunning ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-                title="Run this file"
-              >
-                {isRunning ? (
-                  <div className="w-3 h-3 border border-green-400 border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <Play className="w-3 h-3 text-green-400" />
-                )}
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleSetEntryFile(file._id);
-                }}
-                className="p-1 hover:bg-[#3a3a4a] rounded"
-                title="Set as main file"
-              >
-                <Edit className="w-3 h-3 text-blue-400" />
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteFile(file._id);
-                }}
-                className="p-1 hover:bg-[#3a3a4a] rounded"
-                title="Delete file"
-              >
-                <Trash2 className="w-3 h-3 text-red-400" />
-              </button>
+              {editingFileId === item.id ? (
+                <>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRenameFile(item.id);
+                    }}
+                    className="p-1 hover:bg-[#3a3a4a] rounded"
+                    title="Save"
+                  >
+                    <Check className="w-3 h-3 text-green-400" />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      cancelRenaming();
+                    }}
+                    className="p-1 hover:bg-[#3a3a4a] rounded"
+                    title="Cancel"
+                  >
+                    <X className="w-3 h-3 text-red-400" />
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      startRenaming(item.id, item.name);
+                    }}
+                    className="p-1 hover:bg-[#3a3a4a] rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                    title="Rename file"
+                  >
+                    <Edit2 className="w-3 h-3 text-yellow-400" />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSetEntryFile(file._id);
+                    }}
+                    className="p-1 hover:bg-[#3a3a4a] rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                    title="Set as main file"
+                  >
+                    <Edit className="w-3 h-3 text-blue-400" />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteFile(file._id);
+                    }}
+                    className="p-1 hover:bg-[#3a3a4a] rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                    title="Delete file"
+                  >
+                    <Trash2 className="w-3 h-3 text-red-400" />
+                  </button>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -270,8 +350,8 @@ export default function FileExplorer({
 
   return (
     <div className="w-full bg-[#1e1e2e] h-full overflow-y-auto">
-      <div className="p-4 border-b border-[#313244]">
-        <div className="flex items-center justify-between mb-3">
+      <div className="p-3 border-b border-[#313244]">
+        <div className="flex items-center justify-between">
           <h3 className="text-sm font-semibold text-[#e6edf3]">Explorer</h3>
           <button
             onClick={() => {

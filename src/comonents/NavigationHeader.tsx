@@ -52,6 +52,42 @@ function NavigationHeader() {
                 Home
               </span>
             </Link>
+
+            {/* Code Gallery Link */}
+            <Link
+              href="/snippets"
+              className="relative rounded-xl group flex items-center gap-2 px-4 py-1.5 
+                border border-[#313244]/50 hover:border-[#414155] 
+                bg-[#1e1e2e]/80 hover:bg-[#1e1e2e] 
+                transition-all duration-300"
+            >
+              <div
+                className="absolute inset-0 bg-gradient-to-r from-blue-500/10 
+                to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
+              />
+              <span className="text-sm font-medium text-gray-400 group-hover:text-blue-400 
+                relative z-10 transition-colors">
+                Code Gallery
+              </span>
+            </Link>
+
+            {/* Project Showcase Link */}
+            <Link
+              href="/library"
+              className="relative rounded-xl group flex items-center gap-2 px-4 py-1.5 
+                border border-[#313244]/50 hover:border-[#414155] 
+                bg-[#1e1e2e]/80 hover:bg-[#1e1e2e] 
+                transition-all duration-300"
+            >
+              <div
+                className="absolute inset-0 bg-gradient-to-r from-purple-500/10 
+                to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
+              />
+              <span className="text-sm font-medium text-gray-400 group-hover:text-purple-400 
+                relative z-10 transition-colors">
+                Project Showcase
+              </span>
+            </Link>
           </div>
 
           {/* right rection */}

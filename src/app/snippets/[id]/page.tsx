@@ -7,8 +7,9 @@ import { Id } from "../../../../convex/_generated/dataModel";
 import AuthWrapper from "../../_components/AuthWrapper";
 import SnippetLoadingSkeleton from "./_components/SnippetLoadingSkeleton";
 import NavigationHeader from "@/comonents/NavigationHeader";
-import { Clock, Code, MessageSquare, User } from "lucide-react";
+import { ArrowLeft, Clock, Code, MessageSquare, User } from "lucide-react";
 import { Editor } from "@monaco-editor/react";
+import Link from "next/link";
 import { defineMonacoThemes, LANGUAGE_CONFIG } from "@/app/(root)/_constants";
 import CopyButton from "./_components/CopyButton";
 import Comments from "./_components/Comments";
@@ -31,6 +32,15 @@ function SnippetDetailPageContent() {
 
       <main className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         <div className="max-w-[1200px] mx-auto">
+          {/* Back Link */}
+          <Link
+            href="/snippets"
+            className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Code Gallery
+          </Link>
+
           {/* Header */}
           <div className="bg-[#121218] border border-[#ffffff0a] rounded-2xl p-6 sm:p-8 mb-6 backdrop-blur-xl">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">

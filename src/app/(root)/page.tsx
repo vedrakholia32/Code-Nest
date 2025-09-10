@@ -12,16 +12,20 @@ import { api } from "../../../convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
 import { Id } from "../../../convex/_generated/dataModel";
 import LandingPage from "../_components/LandingPage";
+import Link from "next/link";
+import { Sparkles } from "lucide-react";
 
 export default function Home() {
   // All hooks must be called at the top level, before any early returns
   const { user, isLoaded } = useUser();
   const userData = useQuery(api.users.getUser, { userId: user?.id ?? "" });
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
+    null
+  );
   const [activeMode, setActiveMode] = useState<"single" | "project">("single");
   const [projectOutput, setProjectOutput] = useState("");
   const [projectError, setProjectError] = useState<string | null>(null);
-  
+
   const isPro = userData?.isPro ?? false;
 
   // Show loading state while Clerk is loading
@@ -48,8 +52,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      <Header isPro={isPro} />
-      
+      <Header isPro={isPro} showLanguageSelector={activeMode === "single"} />
+
       {/* Mode Toggle */}
       <div className="bg-[#1e1e2e] border-b border-[#313244] px-4 py-2">
         <div className="flex items-center gap-4">
@@ -61,18 +65,40 @@ export default function Home() {
                 : "text-gray-400 hover:text-white hover:bg-[#2a2a3a]"
             }`}
           >
-            Single File
+            Snippet
           </button>
           <button
-            onClick={() => setActiveMode("project")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            onClick={() => {
+              if (isPro) {
+                setActiveMode("project");
+              }
+            }}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors relative ${
               activeMode === "project"
                 ? "bg-[#7c3aed] text-white"
-                : "text-gray-400 hover:text-white hover:bg-[#2a2a3a]"
+                : isPro 
+                  ? "text-gray-400 hover:text-white hover:bg-[#2a2a3a]" 
+                  : "text-gray-600 cursor-not-allowed"
             }`}
+            disabled={!isPro}
+            title={!isPro ? "Upgrade to Pro to access multi-file projects" : ""}
           >
-            Multi-File Project
+            Project
+            {!isPro && (
+              <span className="absolute -top-1 -right-1 text-xs bg-[#eabc60] text-black px-1 py-0.5 rounded font-bold">
+                PRO
+              </span>
+            )}
           </button>
+          {!isPro && (
+            <Link
+              href="/pricing"
+              className="ml-2 px-3 py-1.5 bg-[#eabc60] hover:bg-[#d4a74a] text-black rounded-lg text-sm font-medium transition-colors flex items-center gap-1"
+            >
+              <Sparkles className="w-3 h-3" />
+              Upgrade to Pro
+            </Link>
+          )}
         </div>
       </div>
 
@@ -81,9 +107,9 @@ export default function Home() {
           <ResizablePanel
             leftPanel={<EditorPanel />}
             rightPanel={<OutputPanel />}
-            initialRatio={0.75}
+            initialRatio={0.8}
             minLeftWidth={45}
-            minRightWidth={25}
+            minRightWidth={20}
           />
         ) : (
           <div className="flex h-full">
@@ -94,26 +120,28 @@ export default function Home() {
             {selectedProjectId ? (
               <ResizablePanel
                 leftPanel={
-                  <MultiFileEditor 
-                    projectId={selectedProjectId as Id<"projects">} 
+                  <MultiFileEditor
+                    projectId={selectedProjectId as Id<"projects">}
                     onRunResult={handleProjectRunResult}
                   />
                 }
                 rightPanel={
-                  <OutputPanel 
-                    output={projectOutput} 
-                    error={projectError} 
+                  <OutputPanel
+                    output={projectOutput}
+                    error={projectError}
                     isProjectMode={true}
                   />
                 }
-                initialRatio={0.7}
+                initialRatio={0.75}
                 minLeftWidth={50}
-                minRightWidth={30}
+                minRightWidth={25}
               />
             ) : (
               <div className="flex-1 flex items-center justify-center bg-[#0a0a0f] text-gray-500">
                 <div className="text-center">
-                  <h3 className="text-lg font-semibold mb-2">No project selected</h3>
+                  <h3 className="text-lg font-semibold mb-2">
+                    No project selected
+                  </h3>
                   <p>Select or create a project to start coding</p>
                 </div>
               </div>

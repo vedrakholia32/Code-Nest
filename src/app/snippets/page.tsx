@@ -56,7 +56,7 @@ function SnippetsPageContent() {
                from-blue-500/10 to-purple-500/10 text-sm text-[#b3b3b3] group-hover:text-[#e0e0e0] transition-colors duration-300 mb-6"
             >
               <BookOpen className="w-4 h-4" />
-              Community Code Library
+              Community Code Gallery
             </motion.div>
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
@@ -64,7 +64,7 @@ function SnippetsPageContent() {
               transition={{ delay: 0.1 }}
               className="text-4xl md:text-5xl font-bold text-[#b3b3b3] group-hover:text-[#e0e0e0] transition-colors duration-300 mb-6"
             >
-              Discover & Share Code Snippets
+              Code Gallery
             </motion.h1>
             <motion.p
               initial={{ opacity: 0 }}

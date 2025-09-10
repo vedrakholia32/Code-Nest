@@ -32,7 +32,6 @@ export default function FontSizeControl() {
         className="flex items-center gap-1 px-2 py-1 text-xs bg-[#262637] hover:bg-[#2a2a3a] text-gray-300 rounded border border-[#313244] transition-colors"
         title="Font Size"
       >
-        <Type size={12} />
         <span className="font-mono">{fontSize}</span>
       </button>
 

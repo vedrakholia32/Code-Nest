@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { LANGUAGE_CONFIG } from "../_constants";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { ChevronDownIcon, Lock, Sparkles } from "lucide-react";
+import { ChevronDownIcon, Sparkles } from "lucide-react";
 import useMounted from "@/hooks/useMounted";
 // import useMounted from "@/hooks/useMounted";
 
-function LanguageSelector({ hasAccess }: { hasAccess: boolean }) {
+function LanguageSelector() {
   const [isOpen, setIsOpen] = useState(false);
   const mounted = useMounted();
 
@@ -31,8 +31,6 @@ function LanguageSelector({ hasAccess }: { hasAccess: boolean }) {
   }, []);
 
   const handleLanguageSelect = (langId: string) => {
-    if (!hasAccess && langId !== "javascript") return;
-
     setLanguage(langId);
     setIsOpen(false);
   };
@@ -45,9 +43,8 @@ function LanguageSelector({ hasAccess }: { hasAccess: boolean }) {
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         onClick={() => setIsOpen(!isOpen)}
-        className={`group relative flex items-center gap-2 px-3 py-1.5 rounded-md transition-all 
-        duration-200 bg-[#1e1e2e] border border-[#232334] hover:border-[#343444] hover:bg-[#2a2a3a]
-        ${!hasAccess && language !== "javascript" ? "opacity-50 cursor-not-allowed" : ""}`}
+        className="group relative flex items-center gap-2 px-3 py-1.5 rounded-md transition-all 
+        duration-200 bg-[#1e1e2e] border border-[#232334] hover:border-[#343444] hover:bg-[#2a2a3a]"
       >
         {/* Decoration */}
         <div className="size-5 rounded-md p-0.5">
@@ -87,25 +84,20 @@ function LanguageSelector({ hasAccess }: { hasAccess: boolean }) {
             </div>
 
             <div className="max-h-[280px] overflow-y-auto overflow-x-hidden hover:cursor-pointer">
-              {Object.values(LANGUAGE_CONFIG).map((lang, index) => {
-                const isLocked = !hasAccess && lang.id !== "javascript";
-
-                return (
-                  <motion.div
-                    key={lang.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="relative group px-2"
-                  >
-                    <button
-                      className={`
-                      relative w-full flex items-center gap-2 px-2 py-1.5 rounded-md transition-colors
-                      ${language === lang.id ? "text-[#eabc60]" : "text-[#b3b3b3]"}
-                      ${isLocked ? "opacity-50 cursor-not-allowed" : "hover:bg-[#2a2a3a]"}
-                    `}
-                      onClick={() => handleLanguageSelect(lang.id)}
-                      disabled={isLocked}
+              {Object.values(LANGUAGE_CONFIG).map((lang, index) => (
+                <motion.div
+                  key={lang.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="relative group px-2"
+                >
+                  <button
+                    className={`
+                    relative w-full flex items-center gap-2 px-2 py-1.5 rounded-md transition-colors
+                    ${language === lang.id ? "text-[#eabc60]" : "text-[#b3b3b3]"} hover:bg-[#2a2a3a]
+                  `}
+                    onClick={() => handleLanguageSelect(lang.id)}
                     >
                       <div className="size-5 rounded-md p-0.5">
                         <Image
@@ -121,17 +113,13 @@ function LanguageSelector({ hasAccess }: { hasAccess: boolean }) {
                         {lang.label}
                       </span>
 
-                      {isLocked ? (
-                        <Lock className="w-3.5 h-3.5 text-[#b3b3b3] opacity-50" />
-                      ) : (
-                        language === lang.id && (
-                          <Sparkles className="w-3.5 h-3.5 text-[#eabc60]" />
-                        )
+                      {language === lang.id && (
+                        <Sparkles className="w-3.5 h-3.5 text-[#eabc60]" />
                       )}
                     </button>
                   </motion.div>
-                );
-              })}
+                )
+              )}
             </div>
           </motion.div>
         )}

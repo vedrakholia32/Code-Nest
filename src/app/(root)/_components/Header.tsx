@@ -7,7 +7,13 @@ import LanguageSelector from "./LanguageSelector";
 import HeaderProfileBtn from "./HeaderProfileBtn";
 import FontSizeControl from "./FontSizeControl";
 
-function Header({ isPro = false }: { isPro?: boolean }) {
+function Header({
+  isPro = false,
+  showLanguageSelector = true,
+}: {
+  isPro?: boolean;
+  showLanguageSelector?: boolean;
+}) {
   return (
     <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-[#181825]/95 border-b border-[#232334] shadow-lg">
       <div className="flex items-center justify-between px-6 py-3">
@@ -32,21 +38,47 @@ function Header({ isPro = false }: { isPro?: boolean }) {
             </div>
           </Link>
         </div>
-        <nav className="flex-1 flex justify-center">
+        <nav className="flex-1 flex justify-center gap-3">
           <Link
             href="/snippets"
-            className="px-4 py-1.5 rounded-md bg-[#1e1e2e] text-[#b3b3b3] border border-[#232334] hover:bg-[#2a2a3a] hover:border-[#343444] transition-all duration-200"
+            className="px-4 py-1.5 rounded-md bg-[#1e1e2e] text-[#b3b3b3] border border-[#232334] hover:bg-[#2a2a3a] hover:border-[#343444] hover:text-[#e0e0e0] transition-all duration-200"
           >
-            Code Library
+            Code Gallery
           </Link>
+          {isPro ? (
+            <Link
+              href="/library"
+              className="px-4 py-1.5 rounded-md bg-[#1e1e2e] text-[#b3b3b3] border border-[#232334] hover:bg-[#2a2a3a] hover:border-[#343444] hover:text-[#e0e0e0] transition-all duration-200"
+            >
+              Project Showcase
+            </Link>
+          ) : (
+            <div className="relative">
+              <button
+                onClick={() => {}}
+                disabled
+                className="px-4 py-1.5 rounded-md bg-[#1e1e2e] text-gray-600 border border-[#232334] cursor-not-allowed relative"
+                title="Upgrade to Pro to access Project Showcase"
+              >
+                Project Showcase
+                <span className="absolute -top-1 -right-1 text-xs bg-[#eabc60] text-black px-1 py-0.5 rounded font-bold">
+                  PRO
+                </span>
+              </button>
+            </div>
+          )}
         </nav>
         <div className="flex items-center">
           <div className="flex items-center gap-3 px-3 py-1.5 bg-[#1e1e2e] rounded-md mr-3">
             <ThemeSelector />
+            {showLanguageSelector && (
+              <>
+                <div className="h-4 w-px bg-[#232334]" />
+                <LanguageSelector />
+              </>
+            )}
             <div className="h-4 w-px bg-[#232334]" />
-            <LanguageSelector hasAccess={isPro} />
-            <div className="h-4 w-px bg-[#232334]" />
-            <FontSizeControl />
+            {/* <FontSizeControl /> */}
           </div>
           {!isPro && (
             <Link

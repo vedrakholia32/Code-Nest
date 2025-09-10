@@ -4,7 +4,7 @@ import { useQuery, useMutation } from "convex/react";
 import { useUser } from "@clerk/nextjs";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
-import { Plus, Globe, Lock, Calendar, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus, Globe, Lock, Calendar, Trash2, ChevronLeft, ChevronRight, Edit2, Check, X } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { LANGUAGE_CONFIG } from "../_constants";
@@ -21,31 +21,21 @@ export default function ProjectManager({ onProjectSelect, selectedProjectId }: P
   );
   const createProject = useMutation(api.projects.createProject);
   const deleteProject = useMutation(api.projects.deleteProject);
+  const updateProject = useMutation(api.projects.updateProject);
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
+  const [editingProjectName, setEditingProjectName] = useState("");
   const [newProject, setNewProject] = useState({
     name: "",
     description: "",
-    language: "javascript",
     isPublic: false
   });
 
   const getLanguageLogo = (language: string) => {
     return LANGUAGE_CONFIG[language]?.logoPath || "/logo.png";
   };
-
-  const languages = [
-    { value: "javascript", label: "JavaScript", logoPath: "/javascript.png" },
-    { value: "typescript", label: "TypeScript", logoPath: "/typescript.png" },
-    { value: "python", label: "Python", logoPath: "/python.png" },
-    { value: "java", label: "Java", logoPath: "/java.png" },
-    { value: "cpp", label: "C++", logoPath: "/cpp.png" },
-    { value: "csharp", label: "C#", logoPath: "/csharp.png" },
-    { value: "go", label: "Go", logoPath: "/go.png" },
-    { value: "rust", label: "Rust", logoPath: "/rust.png" },
-    { value: "ruby", label: "Ruby", logoPath: "/ruby.png" },
-  ];
 
   const handleCreateProject = async () => {
     if (!user || !newProject.name.trim()) return;
@@ -56,7 +46,7 @@ export default function ProjectManager({ onProjectSelect, selectedProjectId }: P
         description: newProject.description || undefined,
         userId: user.id,
         userName: user.fullName || user.emailAddresses[0]?.emailAddress || "Anonymous",
-        language: newProject.language,
+        language: "javascript", // Default language for multi-file projects
         isPublic: newProject.isPublic
       });
       
@@ -65,7 +55,6 @@ export default function ProjectManager({ onProjectSelect, selectedProjectId }: P
       setNewProject({
         name: "",
         description: "",
-        language: "javascript",
         isPublic: false
       });
     } catch (error) {
@@ -86,9 +75,36 @@ export default function ProjectManager({ onProjectSelect, selectedProjectId }: P
     }
   };
 
+  const handleRenameProject = async () => {
+    if (!editingProjectName.trim() || !editingProjectId) return;
+
+    try {
+      await updateProject({
+        projectId: editingProjectId as Id<"projects">,
+        name: editingProjectName.trim(),
+      });
+      setEditingProjectId(null);
+      setEditingProjectName("");
+    } catch (error) {
+      console.error("Failed to rename project:", error);
+    }
+  };
+
+  const startRenaming = (projectId: string, projectName: string) => {
+    setEditingProjectId(projectId);
+    setEditingProjectName(projectName);
+  };
+
+  const cancelRenaming = () => {
+    setEditingProjectId(null);
+    setEditingProjectName("");
+  };
+
   if (!projects) {
     return (
-      <div className="w-16 bg-[#1e1e2e] border-r border-[#313244] h-full">
+      <div className={`bg-[#1e1e2e] border-r border-[#313244] h-full ${
+        isCollapsed ? 'w-15' : 'w-80'
+      }`}>
         <div className="p-2">
           <div className="animate-pulse space-y-2">
             {[...Array(3)].map((_, i) => (
@@ -102,7 +118,7 @@ export default function ProjectManager({ onProjectSelect, selectedProjectId }: P
 
   return (
     <div className={`bg-[#1e1e2e] border-r border-[#313244] h-full overflow-y-auto transition-all duration-300 ${
-      isCollapsed ? 'w-16' : 'w-80'
+      isCollapsed ? 'w-15' : 'w-80'
     }`}>
       {/* Header with collapse button */}
       <div className="p-2 border-b border-[#313244] flex items-center justify-between">
@@ -152,15 +168,26 @@ export default function ProjectManager({ onProjectSelect, selectedProjectId }: P
                   className="w-full px-3 py-2 bg-[#1e1e2e] border border-[#414155] rounded text-white text-sm"
                 />
                 
-                <select
-                  value={newProject.language}
-                  onChange={(e) => setNewProject(prev => ({ ...prev, language: e.target.value }))}
-                  className="w-full px-3 py-2 bg-[#1e1e2e] border border-[#414155] rounded text-white text-sm"
-                >
-                  {languages.map(lang => (
-                    <option key={lang.value} value={lang.value}>{lang.label}</option>
-                  ))}
-                </select>
+                <textarea
+                  placeholder="Description (optional)"
+                  value={newProject.description}
+                  onChange={(e) => setNewProject(prev => ({ ...prev, description: e.target.value }))}
+                  className="w-full px-3 py-2 bg-[#1e1e2e] border border-[#414155] rounded text-white text-sm h-20 resize-none"
+                />
+                
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="isPublic"
+                    checked={newProject.isPublic}
+                    onChange={(e) => setNewProject(prev => ({ ...prev, isPublic: e.target.checked }))}
+                    className="rounded border-[#414155] bg-[#1e1e2e] text-[#7c3aed] focus:ring-[#7c3aed] focus:ring-2"
+                  />
+                  <label htmlFor="isPublic" className="text-sm text-gray-300 flex items-center gap-1">
+                    <Globe className="w-3 h-3" />
+                    Make this project public
+                  </label>
+                </div>
                 
                 <div className="flex gap-2">
                   <button
@@ -197,16 +224,31 @@ export default function ProjectManager({ onProjectSelect, selectedProjectId }: P
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <Image
+                    {/* <Image
                       src={getLanguageLogo(project.language)}
                       alt={`${project.language} logo`}
                       width={16}
                       height={16}
                       className="rounded"
-                    />
-                    <span className="font-medium text-[#e6edf3] text-sm truncate">
-                      {project.name}
-                    </span>
+                    /> */}
+                    {editingProjectId === project._id ? (
+                      <input
+                        type="text"
+                        value={editingProjectName}
+                        onChange={(e) => setEditingProjectName(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') handleRenameProject();
+                          if (e.key === 'Escape') cancelRenaming();
+                        }}
+                        className="font-medium text-[#e6edf3] text-sm bg-[#1e1e2e] border border-[#414155] rounded px-2 py-1 min-w-[100px]"
+                        autoFocus
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    ) : (
+                      <span className="font-medium text-[#e6edf3] text-sm truncate">
+                        {project.name}
+                      </span>
+                    )}
                   </div>
                   <div className="flex items-center gap-1">
                     {project.isPublic ? (
@@ -214,15 +256,66 @@ export default function ProjectManager({ onProjectSelect, selectedProjectId }: P
                     ) : (
                       <Lock className="w-3 h-3 text-gray-400" />
                     )}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteProject(project._id);
-                      }}
-                      className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-500/20 rounded transition-all"
-                    >
-                      <Trash2 className="w-3 h-3 text-red-400" />
-                    </button>
+                    {editingProjectId === project._id ? (
+                      <>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRenameProject();
+                          }}
+                          className="p-1 hover:bg-green-500/20 rounded transition-all"
+                        >
+                          <Check className="w-3 h-3 text-green-400" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            cancelRenaming();
+                          }}
+                          className="p-1 hover:bg-red-500/20 rounded transition-all"
+                        >
+                          <X className="w-3 h-3 text-red-400" />
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            updateProject({
+                              projectId: project._id as Id<"projects">,
+                              isPublic: !project.isPublic,
+                            });
+                          }}
+                          className="opacity-0 group-hover:opacity-100 p-1 hover:bg-blue-500/20 rounded transition-all"
+                          title={project.isPublic ? "Make Private" : "Make Public"}
+                        >
+                          {project.isPublic ? (
+                            <Lock className="w-3 h-3 text-blue-400" />
+                          ) : (
+                            <Globe className="w-3 h-3 text-blue-400" />
+                          )}
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            startRenaming(project._id, project.name);
+                          }}
+                          className="opacity-0 group-hover:opacity-100 p-1 hover:bg-yellow-500/20 rounded transition-all"
+                        >
+                          <Edit2 className="w-3 h-3 text-yellow-400" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteProject(project._id);
+                          }}
+                          className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-500/20 rounded transition-all"
+                        >
+                          <Trash2 className="w-3 h-3 text-red-400" />
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
                 
@@ -242,29 +335,26 @@ export default function ProjectManager({ onProjectSelect, selectedProjectId }: P
           {/* Add Project Button */}
           <button
             onClick={() => setIsCollapsed(false)}
-            className="w-full p-2 bg-[#7c3aed] hover:bg-[#6d28d9] rounded transition-colors"
+            className="w-full p-2 bg-[#7c3aed] hover:bg-[#6d28d9] rounded transition-colors flex items-center justify-center gap-1"
             title="Create New Project"
           >
-            <Plus className="w-4 h-4 text-white mx-auto" />
+            <Plus className="w-3 h-3 text-white" />
+            
           </button>
           
-          {/* Project Icons */}
+          {/* Project Names */}
           {projects.slice(0, 8).map(project => (
             <button
               key={project._id}
               onClick={() => onProjectSelect(project._id)}
-              className={`w-full p-2 rounded hover:bg-[#2a2a3a] transition-colors group relative ${
+              className={`w-full p-2 rounded hover:bg-[#2a2a3a] transition-colors group relative text-left ${
                 selectedProjectId === project._id ? 'bg-[#7c3aed]/20' : ''
               }`}
               title={project.name}
             >
-              <Image
-                src={getLanguageLogo(project.language)}
-                alt={`${project.language} logo`}
-                width={20}
-                height={20}
-                className="rounded mx-auto"
-              />
+              <div className="text-xs text-[#e6edf3] truncate font-medium">
+                {project.name}
+              </div>
               {selectedProjectId === project._id && (
                 <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-[#7c3aed] rounded-r"></div>
               )}

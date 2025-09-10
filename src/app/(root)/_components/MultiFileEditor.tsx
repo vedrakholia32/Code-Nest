@@ -17,30 +17,33 @@ interface MultiFileEditorProps {
   onRunResult?: (output: string, error?: string) => void;
 }
 
-export default function MultiFileEditor({ projectId, onRunResult }: MultiFileEditorProps) {
+export default function MultiFileEditor({
+  projectId,
+  onRunResult,
+}: MultiFileEditorProps) {
   const { user } = useUser();
   const files = useQuery(api.files.getProjectFiles, { projectId });
   const project = useQuery(api.projects.getProject, { projectId });
   const updateFileContent = useMutation(api.files.updateFileContent);
   const saveExecution = useMutation(api.codeExecutions.saveExecution);
-  
+
   const [activeFileId, setActiveFileId] = useState<string | null>(null);
   const [openTabs, setOpenTabs] = useState<string[]>([]);
   const [fileContents, setFileContents] = useState<Record<string, string>>({});
   const [isRunning, setIsRunning] = useState(false);
-  
+
   const { theme, fontSize } = useCodeEditorStore();
 
   // Initialize with entry file or first file
   useEffect(() => {
     if (files && files.length > 0 && !activeFileId) {
-      const entryFile = files.find(f => f.isEntry) || files[0];
+      const entryFile = files.find((f) => f.isEntry) || files[0];
       if (entryFile) {
         setActiveFileId(entryFile._id);
         setOpenTabs([entryFile._id]);
-        setFileContents(prev => ({
+        setFileContents((prev) => ({
           ...prev,
-          [entryFile._id]: entryFile.content
+          [entryFile._id]: entryFile.content,
         }));
       }
     }
@@ -49,29 +52,33 @@ export default function MultiFileEditor({ projectId, onRunResult }: MultiFileEdi
   // Initialize file contents when files load
   useEffect(() => {
     if (files) {
-      const newContents: Record<string, string> = {};
-      files.forEach(file => {
-        if (!fileContents[file._id]) {
-          newContents[file._id] = file.content;
-        }
+      setFileContents((prevContents) => {
+        const newContents: Record<string, string> = { ...prevContents };
+        let hasChanges = false;
+        
+        files.forEach((file) => {
+          if (!newContents[file._id]) {
+            newContents[file._id] = file.content;
+            hasChanges = true;
+          }
+        });
+        
+        return hasChanges ? newContents : prevContents;
       });
-      if (Object.keys(newContents).length > 0) {
-        setFileContents(prev => ({ ...prev, ...newContents }));
-      }
     }
-  }, [files, fileContents]);
+  }, [files]);
 
   const handleFileSelect = (fileId: string) => {
     if (!openTabs.includes(fileId)) {
-      setOpenTabs(prev => [...prev, fileId]);
+      setOpenTabs((prev) => [...prev, fileId]);
     }
     setActiveFileId(fileId);
   };
 
   const handleTabClose = (fileId: string) => {
-    const newTabs = openTabs.filter(id => id !== fileId);
+    const newTabs = openTabs.filter((id) => id !== fileId);
     setOpenTabs(newTabs);
-    
+
     if (activeFileId === fileId && newTabs.length > 0) {
       setActiveFileId(newTabs[newTabs.length - 1]);
     } else if (newTabs.length === 0) {
@@ -80,11 +87,11 @@ export default function MultiFileEditor({ projectId, onRunResult }: MultiFileEdi
   };
 
   const handleContentChange = (fileId: string, content: string) => {
-    setFileContents(prev => ({
+    setFileContents((prev) => ({
       ...prev,
-      [fileId]: content
+      [fileId]: content,
     }));
-    
+
     // Debounced save to database
     const timeoutId = setTimeout(() => {
       updateFileContent({ fileId: fileId as Id<"files">, content });
@@ -96,13 +103,12 @@ export default function MultiFileEditor({ projectId, onRunResult }: MultiFileEdi
   const handleRunFile = async (file: ProjectFile) => {
     setIsRunning(true);
     const currentContent = fileContents[file._id] || file.content;
-    
+
     try {
-      
       // Save current content before running
-      await updateFileContent({ 
-        fileId: file._id as Id<"files">, 
-        content: currentContent 
+      await updateFileContent({
+        fileId: file._id as Id<"files">,
+        content: currentContent,
       });
 
       const response = await fetch("/api/execute-code", {
@@ -122,7 +128,7 @@ export default function MultiFileEditor({ projectId, onRunResult }: MultiFileEdi
         const output = data.run.output || "";
         const error = data.run.stderr || "";
         onRunResult?.(output, error);
-        
+
         // Save execution to database
         if (user) {
           await saveExecution({
@@ -138,7 +144,7 @@ export default function MultiFileEditor({ projectId, onRunResult }: MultiFileEdi
       } else if (data.compile) {
         const compileError = data.compile.output || "Compilation failed";
         onRunResult?.("", compileError);
-        
+
         // Save compilation error to database
         if (user) {
           await saveExecution({
@@ -156,7 +162,7 @@ export default function MultiFileEditor({ projectId, onRunResult }: MultiFileEdi
       console.error("Error running file:", error);
       const errorMessage = "Failed to execute code. Please try again.";
       onRunResult?.("", errorMessage);
-      
+
       // Save execution error to database
       if (user) {
         await saveExecution({
@@ -182,8 +188,10 @@ export default function MultiFileEditor({ projectId, onRunResult }: MultiFileEdi
     );
   }
 
-  const activeFile = files.find(f => f._id === activeFileId);
-  const openTabFiles = openTabs.map(id => files.find(f => f._id === id)).filter(Boolean) as ProjectFile[];
+  const activeFile = files.find((f) => f._id === activeFileId);
+  const openTabFiles = openTabs
+    .map((id) => files.find((f) => f._id === id))
+    .filter(Boolean) as ProjectFile[];
 
   return (
     <ResizablePanel
@@ -205,22 +213,26 @@ export default function MultiFileEditor({ projectId, onRunResult }: MultiFileEdi
             onTabSelect={setActiveFileId}
             onTabClose={handleTabClose}
           />
-          
+
           <EditorToolbar
             activeFile={activeFile || null}
             onRunFile={handleRunFile}
             isRunning={isRunning}
             projectName={project?.name || "Untitled Project"}
+            projectId={projectId}
+            isPublic={project?.isPublic}
           />
-          
+
           {activeFile ? (
             <div className="flex-1">
               <Editor
                 height="100%"
                 language={activeFile.language}
-                theme={theme === "vs-dark" ? "vs-dark" : "light"}
+                theme={theme}
                 value={fileContents[activeFile._id] || activeFile.content}
-                onChange={(value) => handleContentChange(activeFile._id, value || "")}
+                onChange={(value) =>
+                  handleContentChange(activeFile._id, value || "")
+                }
                 options={{
                   fontSize,
                   minimap: { enabled: false },
@@ -246,7 +258,7 @@ export default function MultiFileEditor({ projectId, onRunResult }: MultiFileEdi
         </div>
       }
       initialRatio={0.3}
-      minLeftWidth={20}
+      minLeftWidth={10}
       minRightWidth={70}
     />
   );
