@@ -6,8 +6,7 @@ import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
 import { Plus, Globe, Lock, Calendar, Trash2, ChevronLeft, ChevronRight, Edit2, Check, X } from "lucide-react";
 import { motion } from "framer-motion";
-import Image from "next/image";
-import { LANGUAGE_CONFIG } from "../_constants";
+
 
 interface ProjectManagerProps {
   onProjectSelect: (projectId: string) => void;
@@ -33,9 +32,7 @@ export default function ProjectManager({ onProjectSelect, selectedProjectId }: P
     isPublic: false
   });
 
-  const getLanguageLogo = (language: string) => {
-    return LANGUAGE_CONFIG[language]?.logoPath || "/logo.png";
-  };
+
 
   const handleCreateProject = async () => {
     if (!user || !newProject.name.trim()) return;

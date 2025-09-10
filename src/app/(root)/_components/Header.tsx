@@ -5,7 +5,6 @@ import Image from "next/image";
 import ThemeSelector from "./ThemeSelector";
 import LanguageSelector from "./LanguageSelector";
 import HeaderProfileBtn from "./HeaderProfileBtn";
-import FontSizeControl from "./FontSizeControl";
 
 function Header({
   isPro = false,

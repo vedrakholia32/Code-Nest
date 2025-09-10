@@ -12,7 +12,6 @@ import {
   Calendar, 
   Code, 
   Copy, 
-  Download, 
   Eye, 
   FileText, 
   Globe, 

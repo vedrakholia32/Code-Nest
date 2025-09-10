@@ -266,7 +266,7 @@ function LibraryPageContent() {
   );
 }
 
-function ProjectCard({ project, view }: { project: any; view: "grid" | "list" }) {
+function ProjectCard({ project, view }: { project: { _id: string; _creationTime: number; name: string; description?: string; language: string; createdAt: number; userName: string; isPublic: boolean; userId: string; updatedAt: number }; view: "grid" | "list" }) {
   const config = LANGUAGE_CONFIG[project.language];
 
   if (view === "list") {

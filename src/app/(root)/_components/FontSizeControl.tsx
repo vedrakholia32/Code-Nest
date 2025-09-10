@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useCodeEditorStore } from "@/store/useCodeEditorStore";
-import { Minus, Plus, Type } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 
 export default function FontSizeControl() {
   const { fontSize, setFontSize } = useCodeEditorStore();

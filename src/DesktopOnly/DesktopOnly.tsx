@@ -1,7 +1,7 @@
 "use client";
 
-
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function DesktopOnly() {
   return (
@@ -15,9 +15,11 @@ export default function DesktopOnly() {
         >
           <div className="relative">
             <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full" />
-            <img
+            <Image
               src="/logo.png"
               alt="CodeNest Logo"
+              width={64}
+              height={64}
               className="mx-auto mb-4 w-16 h-16 rounded-full shadow-lg"
             />
             </div>

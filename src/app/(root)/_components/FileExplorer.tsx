@@ -22,17 +22,13 @@ interface FileExplorerProps {
   activeFileId: string | null;
   projectId: Id<"projects">;
   onFileSelect: (fileId: string) => void;
-  onRunFile: (file: ProjectFile) => void;
-  isRunning: boolean;
 }
 
 export default function FileExplorer({
   files,
   activeFileId,
   projectId,
-  onFileSelect,
-  onRunFile,
-  isRunning
+  onFileSelect
 }: FileExplorerProps) {
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(["root"]));
   const [showNewFileInput, setShowNewFileInput] = useState<string | null>(null);
@@ -188,7 +184,6 @@ export default function FileExplorer({
     const isExpanded = expandedFolders.has(item.path);
     const isActive = activeFileId === item.id;
     const file = files.find(f => f._id === item.fileId);
-    const isEntry = file?.isEntry;
 
     return (
       <div key={item.path}>

@@ -201,8 +201,6 @@ export default function MultiFileEditor({
           activeFileId={activeFileId}
           projectId={projectId}
           onFileSelect={handleFileSelect}
-          onRunFile={handleRunFile}
-          isRunning={isRunning}
         />
       }
       rightPanel={

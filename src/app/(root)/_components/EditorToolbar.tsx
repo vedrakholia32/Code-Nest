@@ -1,8 +1,7 @@
 "use client";
 import { ProjectFile } from "@/types";
-import { Settings, Edit2, Check, X, ExternalLink } from "lucide-react";
+import { Edit2, Check, X, ExternalLink } from "lucide-react";
 import FontSizeControl from "./FontSizeControl";
-import ThemeSelector from "./ThemeSelector";
 import { useState, useEffect } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";

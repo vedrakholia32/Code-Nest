@@ -2,6 +2,7 @@ import HeaderProfileBtn from "@/app/(root)/_components/HeaderProfileBtn";
 import { SignedOut } from "@clerk/nextjs";
 import { Sparkles } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 function NavigationHeader() {
   return (
@@ -19,9 +20,11 @@ function NavigationHeader() {
               />
 
               {/* Logo */}
-              <img
+              <Image
                 src="/logo.png"
                 alt="CodeNest Logo"
+                width={48}
+                height={48}
                 className="w-12 h-12 object-contain transform -rotate-6 group-hover:rotate-0 transition-transform duration-500 rounded-3xl"
                 draggable={false}
               />
