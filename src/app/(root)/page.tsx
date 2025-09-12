@@ -13,7 +13,7 @@ import { useUser } from "@clerk/nextjs";
 import { Id } from "../../../convex/_generated/dataModel";
 import LandingPage from "../_components/LandingPage";
 import Link from "next/link";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Code, FolderOpen } from "lucide-react";
 
 export default function Home() {
   // All hooks must be called at the top level, before any early returns
@@ -52,19 +52,24 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      <Header isPro={isPro} showLanguageSelector={activeMode === "single"} />
+      <Header 
+        isPro={isPro} 
+        showLanguageSelector={activeMode === "single"} 
+        activeMode={activeMode}
+      />
 
       {/* Mode Toggle */}
       <div className="bg-[#1e1e2e] border-b border-[#313244] px-4 py-2">
         <div className="flex items-center gap-4">
           <button
             onClick={() => setActiveMode("single")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
               activeMode === "single"
                 ? "bg-[#7c3aed] text-white"
                 : "text-gray-400 hover:text-white hover:bg-[#2a2a3a]"
             }`}
           >
+            <Code className="w-4 h-4" />
             Snippet
           </button>
           <button
@@ -73,7 +78,7 @@ export default function Home() {
                 setActiveMode("project");
               }
             }}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors relative ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors relative flex items-center gap-2 ${
               activeMode === "project"
                 ? "bg-[#7c3aed] text-white"
                 : isPro 
@@ -83,6 +88,7 @@ export default function Home() {
             disabled={!isPro}
             title={!isPro ? "Upgrade to Pro to access multi-file projects" : ""}
           >
+            <FolderOpen className="w-4 h-4" />
             Project
             {!isPro && (
               <span className="absolute -top-1 -right-1 text-xs bg-[#eabc60] text-black px-1 py-0.5 rounded font-bold">

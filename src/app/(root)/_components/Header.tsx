@@ -9,9 +9,11 @@ import HeaderProfileBtn from "./HeaderProfileBtn";
 function Header({
   isPro = false,
   showLanguageSelector = true,
+  activeMode = "single",
 }: {
   isPro?: boolean;
   showLanguageSelector?: boolean;
+  activeMode?: "single" | "project";
 }) {
   return (
     <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-[#181825]/95 border-b border-[#232334] shadow-lg">
@@ -70,7 +72,7 @@ function Header({
         <div className="flex items-center">
           <div className="flex items-center gap-3 px-3 py-1.5 bg-[#1e1e2e] rounded-md mr-3">
             <ThemeSelector />
-            {showLanguageSelector && (
+            {showLanguageSelector && activeMode === "single" && (
               <>
                 <div className="h-4 w-px bg-[#232334]" />
                 <LanguageSelector />

@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { useTextScramble } from '@/hooks/useTextScramble';
-import { useEffect, useRef } from 'react';
 
 interface ScrambleTextProps {
   children: string;
@@ -19,7 +18,7 @@ export default function ScrambleText({
   scrambleSpeed = 50,
   autoStart = true
 }: ScrambleTextProps) {
-  const { displayText, hasScrambled } = useTextScramble(children, {
+  const { displayText } = useTextScramble(children, {
     scrambleSpeed,
     revealDelay: autoStart ? delay : 999999 // Don't auto-start if autoStart is false
   });

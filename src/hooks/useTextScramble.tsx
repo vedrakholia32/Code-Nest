@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 interface UseTextScrambleOptions {
   scrambleSpeed?: number;
@@ -13,7 +13,6 @@ export const useTextScramble = (
   options: UseTextScrambleOptions = {}
 ) => {
   const {
-    scrambleSpeed = 50,
     characters = '!<>-_\\/[]{}—=+*^?#________',
     revealDelay = 1000
   } = options;
@@ -25,7 +24,7 @@ export const useTextScramble = (
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const frameRequest = useRef<number | null>(null);
 
-  const scramble = () => {
+  const scramble = useCallback(() => {
     if (isScrambling || hasScrambled) return;
     
     setIsScrambling(true);
@@ -60,13 +59,13 @@ export const useTextScramble = (
     timeoutRef.current = setTimeout(() => {
       animate();
     }, revealDelay);
-  };
+  }, [isScrambling, hasScrambled, text, characters, revealDelay]);
 
-  const startScramble = () => {
+  const startScramble = useCallback(() => {
     if (!hasScrambled) {
       scramble();
     }
-  };
+  }, [hasScrambled, scramble]);
 
   useEffect(() => {
     setDisplayText(text);
@@ -77,17 +76,21 @@ export const useTextScramble = (
     }
 
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
+      const currentInterval = intervalRef.current;
+      const currentTimeout = timeoutRef.current;
+      const currentFrame = frameRequest.current;
+      
+      if (currentInterval) {
+        clearInterval(currentInterval);
       }
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+      if (currentTimeout) {
+        clearTimeout(currentTimeout);
       }
-      if (frameRequest.current) {
-        cancelAnimationFrame(frameRequest.current);
+      if (currentFrame) {
+        cancelAnimationFrame(currentFrame);
       }
     };
-  }, [text]);
+  }, [text, hasScrambled, scramble]);
 
   return { displayText, scramble: startScramble, isScrambling, hasScrambled };
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 
 interface TextScrambleProps {
@@ -19,11 +19,11 @@ export default function TextScramble({
   scrambleChars = '!<>-_\\/[]{}—=+*^?#________'
 }: TextScrambleProps) {
   // Start with scrambled text instead of normal text
-  const getInitialScrambledText = () => {
+  const getInitialScrambledText = useCallback(() => {
     return text.split('').map(char => 
       char === ' ' ? ' ' : scrambleChars[Math.floor(Math.random() * scrambleChars.length)]
     ).join('');
-  };
+  }, [text, scrambleChars]);
 
   const [displayText, setDisplayText] = useState(getInitialScrambledText);
   const [isScrambling, setIsScrambling] = useState(true); // Start as scrambling
@@ -94,7 +94,7 @@ export default function TextScramble({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [text, delay, scrambleDuration, scrambleChars]);
+  }, [text, delay, scrambleDuration, scrambleChars, getInitialScrambledText]);
 
   return (
     <motion.span 
