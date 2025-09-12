@@ -181,7 +181,7 @@ export default function LandingPage() {
             <div className="flex items-center gap-4">
               <SignInButton mode="modal">
                 <motion.button 
-                  className="px-4 py-2 text-gray-300 hover:text-white transition-colors relative group cursor-pointer"
+                  className="px-4 py-2 text-secondary hover:text-primary transition-all duration-300 relative group cursor-pointer hover-glow font-medium"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -196,7 +196,7 @@ export default function LandingPage() {
               </SignInButton>
               <SignUpButton mode="modal">
                 <motion.button 
-                  className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-lg font-medium relative overflow-hidden group cursor-pointer"
+                  className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-lg font-semibold relative overflow-hidden group cursor-pointer hover-magnetic hover-gradient-shift"
                   whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(139, 92, 246, 0.3)" }}
                   whileTap={{ scale: 0.95 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
@@ -227,13 +227,13 @@ export default function LandingPage() {
             {/* Animated Title with Typing Effect */}
             <div className="relative mb-6">
               <motion.h1 
-                className="text-5xl md:text-7xl font-bold"
+                className="text-5xl md:text-7xl font-bold leading-tight tracking-tight"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
               >
                 <span className="inline-block">
-                  <span className="text-white">
+                  <span className="text-primary font-bold">
                     {typedText}
                   </span>
                   <motion.span
@@ -243,7 +243,7 @@ export default function LandingPage() {
                   />
                 </span>
                 <motion.span 
-                  className="block bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent"
+                  className="block text-gradient font-bold animate-gradient-shift leading-tight"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 2, duration: 0.8 }}
@@ -302,7 +302,7 @@ export default function LandingPage() {
             >
               <SignUpButton mode="modal">
                 <motion.button
-                  className="px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl font-semibold text-lg flex items-center gap-2 relative overflow-hidden group cursor-pointer"
+                  className="px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl font-semibold text-lg flex items-center gap-2 relative overflow-hidden group cursor-pointer hover-magnetic hover-glow animate-pulse-glow"
                   whileHover={{ 
                     scale: 1.05,
                     boxShadow: "0 25px 50px rgba(139, 92, 246, 0.4)",
@@ -310,7 +310,7 @@ export default function LandingPage() {
                   whileTap={{ scale: 0.95 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 >
-                  <span className="relative z-10 flex items-center gap-2">
+                  <span className="relative z-10 flex items-center gap-2 font-weight-semibold">
                     Start Coding Now
                     <motion.div
                       animate={{ x: [0, 5, 0] }}
@@ -335,7 +335,7 @@ export default function LandingPage() {
               </SignUpButton>
               <SignInButton mode="modal">
                 <motion.button
-                  className="px-8 py-4 border border-gray-600 hover:border-gray-500 rounded-xl font-semibold text-lg relative overflow-hidden group cursor-pointer"
+                  className="px-8 py-4 border border-gray-600 hover:border-gray-500 rounded-xl font-semibold text-lg relative overflow-hidden group cursor-pointer hover-border-draw text-secondary hover:text-primary"
                   whileHover={{ 
                     scale: 1.05,
                     borderColor: "rgba(139, 92, 246, 0.5)",
@@ -369,16 +369,16 @@ export default function LandingPage() {
             className="text-center mb-12"
           >
             <motion.h2 
-              className="text-3xl md:text-4xl font-bold mb-4"
+              className="text-3xl md:text-4xl font-semibold mb-4 leading-tight tracking-tight"
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              Code in Your Favorite Language
+              <span className="text-gradient">Code in Your Favorite Language</span>
             </motion.h2>
             <motion.p 
-              className="text-gray-400 text-lg"
+              className="text-secondary text-lg leading-relaxed max-w-2xl mx-auto"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.4 }}
@@ -406,7 +406,7 @@ export default function LandingPage() {
                   rotateY: 10,
                   boxShadow: "0 10px 30px rgba(139, 92, 246, 0.2)",
                 }}
-                className="flex flex-col items-center gap-2 p-4 rounded-xl bg-gray-800/30 hover:bg-gray-800/50 transition-all cursor-pointer group"
+                className="flex flex-col items-center gap-2 p-4 rounded-xl bg-surface-secondary/30 hover:bg-surface-secondary/50 transition-all cursor-pointer group card-hover hover-lift border border-default/20"
               >
                 <motion.div
                   whileHover={{ rotate: 360 }}
@@ -420,7 +420,7 @@ export default function LandingPage() {
                     className="rounded group-hover:drop-shadow-lg"
                   />
                 </motion.div>
-                <span className="text-sm text-gray-300 group-hover:text-white transition-colors">
+                <span className="text-sm text-secondary group-hover:text-primary transition-colors font-medium">
                   {lang.name}
                 </span>
               </motion.div>
@@ -440,16 +440,16 @@ export default function LandingPage() {
             className="text-center mb-16"
           >
             <motion.h2 
-              className="text-3xl md:text-4xl font-bold mb-4"
+              className="text-3xl md:text-4xl font-semibold mb-4 leading-tight tracking-tight"
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              Everything You Need to Code
+              <span className="text-gradient">Everything You Need to Code</span>
             </motion.h2>
             <motion.p 
-              className="text-gray-400 text-lg"
+              className="text-secondary text-lg leading-relaxed max-w-2xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
@@ -477,7 +477,7 @@ export default function LandingPage() {
                   rotateY: 5,
                   boxShadow: "0 25px 50px rgba(139, 92, 246, 0.15)",
                 }}
-                className="p-6 rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/50 hover:border-purple-500/30 transition-all group cursor-pointer relative overflow-hidden"
+                className="p-6 rounded-2xl bg-gradient-to-br from-surface-secondary/50 to-surface-primary/50 border border-default/50 hover:border-purple-500/30 transition-all group cursor-pointer relative overflow-hidden card-hover hover-lift"
               >
                 {/* Animated background gradient */}
                 <motion.div
@@ -499,10 +499,10 @@ export default function LandingPage() {
                   {feature.icon}
                 </motion.div>
                 
-                <h3 className="text-xl font-semibold mb-2 relative z-10 group-hover:text-purple-300 transition-colors">
+                <h3 className="text-xl font-semibold mb-2 relative z-10 group-hover:text-purple-300 transition-colors leading-snug tracking-tight">
                   {feature.title}
                 </h3>
-                <p className="text-gray-400 leading-relaxed relative z-10 group-hover:text-gray-300 transition-colors">
+                <p className="text-secondary leading-relaxed relative z-10 group-hover:text-primary transition-colors">
                   {feature.description}
                 </p>
                 
@@ -545,7 +545,7 @@ export default function LandingPage() {
             
             <div className="relative z-10">
               <motion.h2 
-                className="text-3xl md:text-4xl font-bold mb-6"
+                className="text-3xl md:text-4xl font-weight-bold mb-6 text-primary"
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
@@ -554,7 +554,7 @@ export default function LandingPage() {
                 Ready to Start Coding?
               </motion.h2>
               <motion.p 
-                className="text-xl text-gray-300 mb-8"
+                className="text-xl text-secondary mb-8 line-height-relaxed"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
@@ -564,7 +564,7 @@ export default function LandingPage() {
               </motion.p>
               <SignUpButton mode="modal">
                 <motion.button
-                  className="px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl font-semibold text-lg flex items-center gap-2 mx-auto relative overflow-hidden group cursor-pointer"
+                  className="px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl font-semibold text-lg flex items-center gap-2 mx-auto relative overflow-hidden group cursor-pointer hover-magnetic hover-glow animate-pulse-glow"
                   initial={{ opacity: 0, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.6, delay: 0.6 }}
@@ -575,7 +575,7 @@ export default function LandingPage() {
                   }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <span className="relative z-10 flex items-center gap-2">
+                  <span className="relative z-10 flex items-center gap-2 font-weight-semibold">
                     <motion.div
                       animate={{ rotate: [0, 360] }}
                       transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
