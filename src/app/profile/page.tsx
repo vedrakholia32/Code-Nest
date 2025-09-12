@@ -103,7 +103,7 @@ function ProfilePageContent() {
                   onClick={() =>
                     setActiveTab(tab.id as "executions" | "starred")
                   }
-                  className={`group flex items-center gap-2 px-6 py-2.5 rounded-lg transition-all duration-200 relative overflow-hidden ${
+                  className={`group flex items-center gap-2 px-6 py-2.5 rounded-lg transition-all duration-200 relative overflow-hidden cursor-pointer hover:scale-105 active:scale-95 ${
                     activeTab === tab.id
                       ? "text-blue-400"
                       : "text-gray-400 hover:text-gray-300"
@@ -257,10 +257,10 @@ function ProfilePageContent() {
                       <button
                         onClick={handleLoadMore}
                         className="px-6 py-3 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 rounded-lg flex items-center gap-2 
-                        transition-colors"
+                        transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95 group"
                       >
                         Load More
-                        <ChevronRight className="w-4 h-4" />
+                        <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
                       </button>
                     </div>
                   )}

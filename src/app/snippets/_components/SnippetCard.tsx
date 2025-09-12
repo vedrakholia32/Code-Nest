@@ -37,11 +37,12 @@ function SnippetCard({ snippet }: { snippet: Snippet }) {
       whileHover={{ y: -2 }}
       transition={{ duration: 0.2 }}
     >
-      <Link href={`/snippets/${snippet._id}`} className="h-full block">
+      <Link href={`/snippets/${snippet._id}`} className="h-full block cursor-pointer">
         <div
           className="relative h-full bg-[#1e1e2e]/80 backdrop-blur-sm rounded-xl 
           border border-[#313244]/50 hover:border-[#414155] 
-          transition-all duration-300 overflow-hidden hover:shadow-lg hover:shadow-blue-500/5"
+          transition-all duration-300 overflow-hidden hover:shadow-lg hover:shadow-blue-500/5
+          hover:bg-[#1e1e2e]/90 hover:transform hover:scale-[1.02]"
         >
           <div className="p-6">
             {/* Header */}
@@ -87,7 +88,7 @@ function SnippetCard({ snippet }: { snippet: Snippet }) {
                     <button
                       onClick={handleDelete}
                       disabled={isDeleting}
-                      className={`group flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all duration-200 
+                      className={`group flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95
                                   ${
                                     isDeleting
                                       ? "bg-red-500/20 text-red-400 cursor-not-allowed"
@@ -96,9 +97,9 @@ function SnippetCard({ snippet }: { snippet: Snippet }) {
                                 `}
                     >
                       {isDeleting ? (
-                        <div className="size-3.5 border-2 border-red-400/30 border-t-red-400 rounded-full animate-spin hover:cursor-pointer" />
+                        <div className="size-3.5 border-2 border-red-400/30 border-t-red-400 rounded-full animate-spin" />
                       ) : (
-                        <Trash2 className="size-3.5 hover:cursor-pointer" />
+                        <Trash2 className="size-3.5 group-hover:rotate-12 transition-transform duration-200" />
                       )}
                     </button>
                   </div>

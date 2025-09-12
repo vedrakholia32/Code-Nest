@@ -43,7 +43,7 @@ function ShareSnippetDialog({ onClose }: { onClose: () => void }) {
           <h2 className="text-xl font-semibold text-white">Share Snippet</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-300"
+            className="text-gray-400 hover:text-gray-300 cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200"
           >
             <X className="w-5 h-5" />
           </button>
@@ -72,7 +72,7 @@ function ShareSnippetDialog({ onClose }: { onClose: () => void }) {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-400 hover:text-gray-300"
+              className="px-4 py-2 text-gray-400 hover:text-gray-300 cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200"
             >
               Cancel
             </button>
@@ -80,7 +80,7 @@ function ShareSnippetDialog({ onClose }: { onClose: () => void }) {
               type="submit"
               disabled={isSharing}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 
-              disabled:opacity-50"
+              disabled:opacity-50 cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200"
             >
               {isSharing ? "Sharing..." : "Share"}
             </button>

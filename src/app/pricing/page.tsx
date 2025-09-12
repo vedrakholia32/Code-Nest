@@ -55,7 +55,10 @@ function PricingPageContent() {
             {ENTERPRISE_FEATURES.map((feature) => (
               <div
                 key={feature.label}
-                className="group relative bg-gradient-to-b from-[#12121a] to-[#0a0a0f] rounded-2xl p-6 hover:transform hover:scale-[1.02] transition-all duration-300"
+                className="group relative bg-gradient-to-b from-[#12121a] to-[#0a0a0f] rounded-2xl p-6 
+                hover:transform hover:scale-[1.02] transition-all duration-300 cursor-pointer
+                hover:bg-gradient-to-b hover:from-[#15151d] hover:to-[#0d0d12]
+                ring-1 ring-gray-800/50 hover:ring-blue-500/30"
               >
                 <div className="relative">
                   <div

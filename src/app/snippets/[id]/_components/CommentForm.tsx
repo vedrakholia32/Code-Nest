@@ -41,7 +41,7 @@ function CommentForm({ isSubmitting, onSubmit }: CommentFormProps) {
           <button
             type="button"
             onClick={() => setIsPreview(!isPreview)}
-            className={`text-sm px-3 py-1 rounded-md transition-colors ${
+            className={`text-sm px-3 py-1 rounded-md transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95 ${
               isPreview ? "bg-blue-500/10 text-blue-400" : "hover:bg-[#ffffff08] text-gray-400"
             }`}
           >
@@ -79,7 +79,9 @@ function CommentForm({ isSubmitting, onSubmit }: CommentFormProps) {
           <button
             type="submit"
             disabled={isSubmitting || !comment.trim()}
-            className="flex items-center gap-2 px-4 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#2563eb] disabled:opacity-50 disabled:cursor-not-allowed transition-all ml-auto"
+            className="flex items-center gap-2 px-4 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#2563eb] 
+            disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 ml-auto
+            cursor-pointer hover:scale-105 active:scale-95 group"
           >
             {isSubmitting ? (
               <>
@@ -91,8 +93,8 @@ function CommentForm({ isSubmitting, onSubmit }: CommentFormProps) {
               </>
             ) : (
               <>
-                <SendIcon className="w-4 h-4 hover:cursor-pointer" />
-                <span className="hover:cursor-pointer">Comment</span>
+                <SendIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
+                <span>Comment</span>
               </>
             )}
           </button>
