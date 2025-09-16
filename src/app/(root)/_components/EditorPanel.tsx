@@ -6,7 +6,7 @@ import { Editor } from "@monaco-editor/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { RotateCcwIcon, ShareIcon, TypeIcon } from "lucide-react";
-import { SignedIn, useClerk } from "@clerk/nextjs";
+import { SignedIn, useClerk, useUser } from "@clerk/nextjs";
 import { EditorPanelSkeleton } from "./EditorPanelSkeleton";
 import useMounted from "@/hooks/useMounted";
 import ShareSnippetDialog from "./ShareSnippetDialog";
@@ -14,17 +14,44 @@ import RunButton from "./RunButton";
 
 function EditorPanel() {
   const clerk = useClerk();
+  const { user } = useUser();
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const { language, theme, fontSize, editor, setFontSize, setEditor } =
     useCodeEditorStore();
 
   const mounted = useMounted();
 
+  // Function to get personalized default code
+  const getPersonalizedCode = (language: string, userName?: string) => {
+    const firstName = userName ? userName.split(' ')[0] : null;
+    const greeting = firstName ? `Hello, ${firstName}!` : "Hello, World!";
+    
+    const baseCode = LANGUAGE_CONFIG[language].defaultCode;
+    
+    // Replace "Hello, World!" with personalized greeting
+    return baseCode.replace("Hello, World!", greeting);
+  };
+
   useEffect(() => {
     const savedCode = localStorage.getItem(`editor-code-${language}`);
-    const newCode = savedCode || LANGUAGE_CONFIG[language].defaultCode;
-    if (editor) editor.setValue(newCode);
-  }, [language, editor]);
+    const codeVersion = localStorage.getItem(`editor-code-version-${language}`);
+    const currentVersion = "v4.0"; // Updated version for personalized examples
+    
+    // Use new default code if no saved code or version mismatch
+    const userName = user?.fullName || user?.firstName || undefined;
+    const defaultCode = getPersonalizedCode(language, userName);
+    const newCode = (savedCode && codeVersion === currentVersion) 
+      ? savedCode 
+      : defaultCode;
+      
+    if (editor) {
+      editor.setValue(newCode);
+      // Update version when using default code
+      if (!savedCode || codeVersion !== currentVersion) {
+        localStorage.setItem(`editor-code-version-${language}`, currentVersion);
+      }
+    }
+  }, [language, editor, user]);
 
   useEffect(() => {
     const { loadSavedState } = useCodeEditorStore.getState();
@@ -32,13 +59,17 @@ function EditorPanel() {
   }, []);
 
   const handleRefresh = () => {
-    const defaultCode = LANGUAGE_CONFIG[language].defaultCode;
+    const userName = user?.fullName || user?.firstName || undefined;
+    const defaultCode = getPersonalizedCode(language, userName);
     if (editor) editor.setValue(defaultCode);
     localStorage.removeItem(`editor-code-${language}`);
   };
 
   const handleEditorChange = (value: string | undefined) => {
-    if (value) localStorage.setItem(`editor-code-${language}`, value);
+    if (value) {
+      localStorage.setItem(`editor-code-${language}`, value);
+      localStorage.setItem(`editor-code-version-${language}`, "v4.0");
+    }
   };
 
   const handleFontSizeChange = (newSize: number) => {

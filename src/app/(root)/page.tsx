@@ -56,59 +56,10 @@ export default function Home() {
         isPro={isPro} 
         showLanguageSelector={activeMode === "single"} 
         activeMode={activeMode}
+        onModeChange={setActiveMode}
       />
 
-      {/* Mode Toggle */}
-      <div className="bg-[#1e1e2e] border-b border-[#313244] px-4 py-2">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => setActiveMode("single")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
-              activeMode === "single"
-                ? "bg-[#7c3aed] text-white"
-                : "text-gray-400 hover:text-white hover:bg-[#2a2a3a]"
-            }`}
-          >
-            <Code className="w-4 h-4" />
-            Snippet
-          </button>
-          <button
-            onClick={() => {
-              if (isPro) {
-                setActiveMode("project");
-              }
-            }}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors relative flex items-center gap-2 ${
-              activeMode === "project"
-                ? "bg-[#7c3aed] text-white"
-                : isPro 
-                  ? "text-gray-400 hover:text-white hover:bg-[#2a2a3a]" 
-                  : "text-gray-600 cursor-not-allowed"
-            }`}
-            disabled={!isPro}
-            title={!isPro ? "Upgrade to Pro to access multi-file projects" : ""}
-          >
-            <FolderOpen className="w-4 h-4" />
-            Project
-            {!isPro && (
-              <span className="absolute -top-1 -right-1 text-xs bg-[#eabc60] text-black px-1 py-0.5 rounded font-bold">
-                PRO
-              </span>
-            )}
-          </button>
-          {!isPro && (
-            <Link
-              href="/pricing"
-              className="ml-2 px-3 py-1.5 bg-[#eabc60] hover:bg-[#d4a74a] text-black rounded-lg text-sm font-medium transition-colors flex items-center gap-1"
-            >
-              <Sparkles className="w-3 h-3" />
-              Upgrade to Pro
-            </Link>
-          )}
-        </div>
-      </div>
-
-      <div className="h-[calc(100vh-120px)] w-full">
+      <div className="h-[calc(100vh-80px)] w-full">
         {activeMode === "single" ? (
           <ResizablePanel
             leftPanel={<EditorPanel />}

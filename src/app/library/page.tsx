@@ -4,7 +4,21 @@ import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { BookOpen, Code, Grid, Layers, Search, Tag, X, Clock, User, Globe, Eye, Sparkles, Lock } from "lucide-react";
+import {
+  BookOpen,
+  Code,
+  Grid,
+  Layers,
+  Search,
+  Tag,
+  X,
+  Clock,
+  User,
+  Globe,
+  Eye,
+  Sparkles,
+  Lock,
+} from "lucide-react";
 import NavigationHeader from "@/comonents/NavigationHeader";
 import Image from "next/image";
 import { LANGUAGE_CONFIG } from "../(root)/_constants";
@@ -39,7 +53,8 @@ function LibraryPageContent() {
       project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       project.language.toLowerCase().includes(searchQuery.toLowerCase()) ||
       project.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (project.description && project.description.toLowerCase().includes(searchQuery.toLowerCase()));
+      (project.description &&
+        project.description.toLowerCase().includes(searchQuery.toLowerCase()));
 
     const matchesLanguage =
       !selectedLanguage || project.language === selectedLanguage;
@@ -54,33 +69,47 @@ function LibraryPageContent() {
         <NavigationHeader />
         <div className="max-w-2xl mx-auto px-4 py-20 text-center">
           <div className="mb-8">
-            <Lock className="h-16 w-16 text-purple-500 mx-auto mb-4" />
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-purple-600 bg-clip-text text-transparent mb-4">
+            {/* <Lock className="h-16 w-16 text-purple-500 mx-auto mb-4" /> */}
+            <h1 className="text-4xl md:text-5xl font-bold text-[#b3b3b3] group-hover:text-[#e0e0e0] transition-colors duration-300 mb-6">
               Project Showcase
             </h1>
             <p className="text-lg text-gray-400 mb-8">
-              Access to multi-file projects and the Project Showcase is available exclusively for Pro users.
+              Access to multi-file projects and the Project Showcase is
+              available exclusively for Pro users.
             </p>
           </div>
-          
+
           <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-6 rounded-xl text-white mb-8">
             <Sparkles className="h-8 w-8 mx-auto mb-3" />
             <h2 className="text-xl font-semibold mb-2">Upgrade to Pro</h2>
-            <p className="mb-4">Unlock multi-file projects, private repositories, and advanced collaboration features.</p>
+            <p className="mb-4">
+              Unlock multi-file projects, private repositories, and advanced
+              collaboration features.
+            </p>
             <button className="bg-white text-purple-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
               Upgrade Now
             </button>
           </div>
-          
+
           <div className="text-center">
             <p className="text-gray-500 mb-4">Looking for code snippets?</p>
-            <Link 
+            <Link
               href="/snippets"
               className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-medium transition-colors"
             >
               Visit Code Gallery
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
               </svg>
             </Link>
           </div>
@@ -103,7 +132,7 @@ function LibraryPageContent() {
           >
             <div className="flex items-center justify-center gap-2 mb-4">
               <BookOpen className="w-8 h-8 text-[#7c3aed]" />
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-4xl md:text-5xl font-bold text-[#b3b3b3] group-hover:text-[#e0e0e0] transition-colors duration-300">
                 Project Showcase
               </h1>
             </div>
@@ -193,7 +222,8 @@ function LibraryPageContent() {
             {/* View Toggle */}
             <div className="flex items-center justify-between">
               <div className="text-gray-300">
-                <span className="font-medium">{filteredProjects.length}</span> projects found
+                <span className="font-medium">{filteredProjects.length}</span>{" "}
+                projects found
               </div>
               <div className="flex items-center gap-2">
                 <button
@@ -252,11 +282,7 @@ function LibraryPageContent() {
               }
             >
               {filteredProjects.map((project) => (
-                <ProjectCard
-                  key={project._id}
-                  project={project}
-                  view={view}
-                />
+                <ProjectCard key={project._id} project={project} view={view} />
               ))}
             </motion.div>
           )}
@@ -266,7 +292,24 @@ function LibraryPageContent() {
   );
 }
 
-function ProjectCard({ project, view }: { project: { _id: string; _creationTime: number; name: string; description?: string; language: string; createdAt: number; userName: string; isPublic: boolean; userId: string; updatedAt: number }; view: "grid" | "list" }) {
+function ProjectCard({
+  project,
+  view,
+}: {
+  project: {
+    _id: string;
+    _creationTime: number;
+    name: string;
+    description?: string;
+    language: string;
+    createdAt: number;
+    userName: string;
+    isPublic: boolean;
+    userId: string;
+    updatedAt: number;
+  };
+  view: "grid" | "list";
+}) {
   const config = LANGUAGE_CONFIG[project.language];
 
   if (view === "list") {
@@ -310,7 +353,9 @@ function ProjectCard({ project, view }: { project: { _id: string; _creationTime:
               </div>
               <div className="flex items-center gap-1">
                 <Clock className="w-4 h-4" />
-                <span>{new Date(project._creationTime).toLocaleDateString()}</span>
+                <span>
+                  {new Date(project._creationTime).toLocaleDateString()}
+                </span>
               </div>
             </div>
           </div>
@@ -423,7 +468,10 @@ function LibraryPageSkeleton() {
           {/* Projects Skeleton */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(9)].map((_, i) => (
-              <div key={i} className="bg-[#1a1a2e] rounded-xl p-6 border border-[#16213e]">
+              <div
+                key={i}
+                className="bg-[#1a1a2e] rounded-xl p-6 border border-[#16213e]"
+              >
                 <div className="flex justify-between items-center mb-4">
                   <div className="h-4 bg-gray-800 rounded w-20"></div>
                   <div className="h-4 bg-gray-800 rounded w-16"></div>

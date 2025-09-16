@@ -4,6 +4,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
 import { ProjectFile, ExecuteCodeResponse } from "@/types";
+import { LANGUAGE_CONFIG } from "../_constants";
 import FileExplorer from "./FileExplorer";
 import EditorTabs from "./EditorTabs";
 import EditorToolbar from "./EditorToolbar";
@@ -11,6 +12,82 @@ import ResizablePanel from "./ResizablePanel";
 import { Editor } from "@monaco-editor/react";
 import { useCodeEditorStore } from "@/store/useCodeEditorStore";
 import { useUser } from "@clerk/nextjs";
+
+// Helper function for Piston API execution
+async function executePistonCode(language: string, code: string): Promise<ExecuteCodeResponse> {
+  const runtime = LANGUAGE_CONFIG[language]?.pistonRuntime;
+  
+  if (!runtime) {
+    return {
+      run: {
+        output: "",
+        stderr: `Unsupported language: ${language}`
+      }
+    };
+  }
+
+  try {
+    const response = await fetch("https://emkc.org/api/v2/piston/execute", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        language: runtime.language,
+        version: runtime.version,
+        files: [{ content: code }],
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    console.log("Piston execution result:", data);
+
+    // Handle compilation errors
+    if (data.compile && data.compile.code !== 0) {
+      const error = data.compile.stderr || data.compile.output || "Compilation failed";
+      return {
+        run: {
+          output: "",
+          stderr: error
+        }
+      };
+    }
+
+    // Handle runtime errors
+    if (data.run && data.run.code !== 0) {
+      const error = data.run.stderr || "Runtime error occurred";
+      const output = data.run.output || "";
+      return {
+        run: {
+          output: output,
+          stderr: error
+        }
+      };
+    }
+
+    // Success case
+    const output = data.run?.output || "";
+    return {
+      run: {
+        output: output.trim(),
+        stderr: ""
+      }
+    };
+  } catch (error) {
+    console.error("Piston API error:", error);
+    return {
+      run: {
+        output: "",
+        stderr: `Execution failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+      }
+    };
+  }
+}
 
 interface MultiFileEditorProps {
   projectId: Id<"projects">;
@@ -111,18 +188,8 @@ export default function MultiFileEditor({
         content: currentContent,
       });
 
-      const response = await fetch("/api/execute-code", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          language: file.language,
-          code: currentContent,
-        }),
-      });
-
-      const data: ExecuteCodeResponse = await response.json();
+      // Execute code using Piston API (same as snippet mode)
+      const data = await executePistonCode(file.language, currentContent);
 
       if (data.run) {
         const output = data.run.output || "";

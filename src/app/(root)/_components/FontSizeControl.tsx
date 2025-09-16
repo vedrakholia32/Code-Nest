@@ -29,7 +29,7 @@ export default function FontSizeControl() {
       {/* Font Size Display Button */}
       <button
         onClick={() => setShowSlider(!showSlider)}
-        className="flex items-center gap-1 px-2 py-1 text-xs bg-[#262637] hover:bg-[#2a2a3a] text-gray-300 rounded border border-[#313244] transition-colors"
+        className="flex items-center px-2 py-1 text-xs bg-[#262637] hover:bg-[#2a2a3a] text-gray-300 rounded border border-[#313244] transition-colors"
         title="Font Size"
       >
         <span className="font-mono">{fontSize}</span>

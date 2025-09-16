@@ -103,7 +103,6 @@ export default function EditorToolbar({
         </div>
         
         <div className="flex items-center gap-3 px-2 py-1 bg-[#1e1e2e] rounded border border-[#313244]">
-          <div className="h-3 w-px bg-[#313244]" />
           <FontSizeControl />
         </div>
       </div>
