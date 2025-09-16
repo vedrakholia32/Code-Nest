@@ -55,6 +55,13 @@ function Header({
               onClick={() => {
                 if (isPro) {
                   onModeChange?.("project");
+                } else {
+                  // Show upgrade prompt for non-Pro users
+                  if (window.confirm(
+                    "Project Mode is a Pro feature that allows you to create multi-file projects. Would you like to upgrade to Pro now?"
+                  )) {
+                    window.location.href = "/pricing";
+                  }
                 }
               }}
               className={`p-2 rounded-lg transition-colors relative flex items-center ${
@@ -62,14 +69,13 @@ function Header({
                   ? "bg-[#7c3aed] text-white"
                   : isPro 
                     ? "text-gray-400 hover:text-white hover:bg-[#2a2a3a]" 
-                    : "text-gray-600 cursor-not-allowed"
+                    : "text-gray-600 hover:text-gray-400 cursor-pointer"
               }`}
-              disabled={!isPro}
               title={!isPro ? "Upgrade to Pro to access Project Mode" : "Project Mode"}
             >
               <FolderOpen className="w-4 h-4" />
               {!isPro && (
-                <span className="absolute -top-1 -right-1 text-xs bg-[#eabc60] text-black px-1 py-0.5 rounded font-bold">
+                <span className="absolute -top-1 -right-1 text-xs bg-gradient-to-r from-[#eabc60] to-[#d4a74a] text-black px-1.5 py-0.5 rounded-full font-bold shadow-sm animate-pulse">
                   PRO
                 </span>
               )}
@@ -77,7 +83,7 @@ function Header({
             {!isPro && (
               <Link
                 href="/pricing"
-                className="ml-2 px-3 py-1.5 bg-[#eabc60] hover:bg-[#d4a74a] text-black rounded-lg text-sm font-medium transition-colors flex items-center gap-1"
+                className="ml-2 px-3 py-1.5 bg-gradient-to-r from-[#eabc60] to-[#d4a74a] hover:from-[#d4a74a] hover:to-[#c19635] text-black rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1 shadow-md hover:shadow-lg transform hover:scale-105"
               >
                 <Sparkles className="w-3 h-3" />
                 Upgrade to Pro

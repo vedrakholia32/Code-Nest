@@ -46,7 +46,7 @@ function PricingPageContent() {
               </h1>
             </div>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              Join the next generation of developers with our professional suite of tools
+              Unlock multi-file projects, advanced collaboration features, and exclusive perks
             </p>
           </div>
 
@@ -98,12 +98,17 @@ function PricingPageContent() {
                   <h2 className="text-3xl font-semibold text-white mb-4">Lifetime Pro Access</h2>
                   <div className="flex items-baseline justify-center gap-2 mb-4">
                     <span className="text-2xl text-gray-400">$</span>
-                    <span className="text-6xl font-semibold bg-gradient-to-r from-gray-100 to-gray-300 text-transparent bg-clip-text">
-                      39
-                    </span>
+                    <div className="flex items-start">
+                      <span className="text-6xl font-semibold bg-gradient-to-r from-gray-100 to-gray-300 text-transparent bg-clip-text">
+                        39
+                      </span>
+                      <span className="text-3xl font-semibold bg-gradient-to-r from-gray-100 to-gray-300 text-transparent bg-clip-text mt-1">
+                        .99
+                      </span>
+                    </div>
                     <span className="text-xl text-gray-400">one-time</span>
                   </div>
-                  <p className="text-gray-400 text-lg">Unlock the full potential of CodeCraft</p>
+                  <p className="text-gray-400 text-lg">Unlock multi-file projects and advanced features</p>
                 </div>
 
                 {/* Features grid */}
@@ -120,8 +125,8 @@ function PricingPageContent() {
                     ))}
                   </FeatureCategory>
 
-                  <FeatureCategory label="Deployment">
-                    {FEATURES.deployment.map((feature, idx) => (
+                  <FeatureCategory label="Exclusive Perks">
+                    {FEATURES.exclusive.map((feature, idx) => (
                       <FeatureItem key={idx}>{feature}</FeatureItem>
                     ))}
                   </FeatureCategory>

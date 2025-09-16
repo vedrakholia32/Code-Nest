@@ -83,12 +83,14 @@ function LibraryPageContent() {
             <Sparkles className="h-8 w-8 mx-auto mb-3" />
             <h2 className="text-xl font-semibold mb-2">Upgrade to Pro</h2>
             <p className="mb-4">
-              Unlock multi-file projects, private repositories, and advanced
-              collaboration features.
+              Unlock multi-file projects, advanced collaboration features, and exclusive perks.
             </p>
-            <button className="bg-white text-purple-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+            <Link
+              href="/pricing"
+              className="inline-block bg-white text-purple-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+            >
               Upgrade Now
-            </button>
+            </Link>
           </div>
 
           <div className="text-center">

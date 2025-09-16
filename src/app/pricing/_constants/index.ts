@@ -2,44 +2,42 @@ import { Boxes, Globe, RefreshCcw, Shield } from "lucide-react";
 
 export const ENTERPRISE_FEATURES = [
   {
+    icon: Boxes,
+    label: "Multi-File Projects",
+    desc: "Create and manage complex projects with multiple files",
+  },
+  {
     icon: Globe,
-    label: "Global Infrastructure",
-    desc: "Lightning-fast execution across worldwide edge nodes",
+    label: "Project Showcase",
+    desc: "Access to view and share multi-file projects publicly",
   },
   {
     icon: Shield,
-    label: "Enterprise Security",
-    desc: "Bank-grade encryption and security protocols",
+    label: "Pro Member Badge",
+    desc: "Exclusive Pro member status and visual indicators",
   },
   {
     icon: RefreshCcw,
-    label: "Real-time Sync",
-    desc: "Instant synchronization across all devices",
-  },
-  {
-    icon: Boxes,
-    label: "Unlimited Storage",
-    desc: "Store unlimited snippets and projects",
+    label: "Advanced Features",
+    desc: "Access to upcoming Pro-only features and tools",
   },
 ];
 
 export const FEATURES = {
   development: [
-    "Advanced AI",
-    "Custom theme builder",
-    "Integrated debugging tools",
-    "Multi-language support",
+    "Multi-file project creation",
+    "Advanced code editor with Monaco",
+    "Real-time code execution",
   ],
   collaboration: [
-    "Real-time pair programming",
-    "Team workspaces",
-    "Version control integration",
-    "Code review tools",
+    "Public project sharing",
+    "Project showcase access",
+    "Code snippet gallery",
+    "Community features",
   ],
-  deployment: [
-    "One-click deployment",
-    "CI/CD integration",
-    "Container support",
-    "Custom domain mapping",
+  exclusive: [
+    "Priority support",
+    "Early access to new features",
+    "Lifetime updates",
   ],
 };
