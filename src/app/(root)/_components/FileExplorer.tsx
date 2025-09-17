@@ -177,7 +177,7 @@ export default function FileExplorer({
     };
 
     const language = extensionToLanguage[extension || ''];
-    return language ? LANGUAGE_CONFIG[language].logoPath : "/logo.png";
+    return language ? LANGUAGE_CONFIG[language].logoPath : "/Code-Nest-new.png";
   };
 
   const renderTreeItem = (item: FileTreeItem, depth = 0) => {

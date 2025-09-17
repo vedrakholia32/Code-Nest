@@ -16,7 +16,7 @@ export default function DesktopOnly() {
           <div className="relative">
             <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full" />
             <Image
-              src="/logo.png"
+              src="/Code-Nest-new.png"
               alt="CodeNest Logo"
               width={64}
               height={64}

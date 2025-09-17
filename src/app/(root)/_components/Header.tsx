@@ -26,7 +26,7 @@ function Header({
           <Link href="/" className="flex items-center gap-3 group relative">
             <div className="relative w-9 h-9">
               <Image
-                src="/logo.png"
+                src="/Code-Nest-new.png"
                 alt="Logo"
                 width={36}
                 height={36}
@@ -37,7 +37,7 @@ function Header({
               <div className="absolute inset-0 bg-blue-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
           </Link>
-          
+
           {/* Mode Toggle Buttons */}
           <div className="flex items-center gap-2 ml-4">
             <button
@@ -57,9 +57,11 @@ function Header({
                   onModeChange?.("project");
                 } else {
                   // Show upgrade prompt for non-Pro users
-                  if (window.confirm(
-                    "Project Mode is a Pro feature that allows you to create multi-file projects. Would you like to upgrade to Pro now?"
-                  )) {
+                  if (
+                    window.confirm(
+                      "Project Mode is a Pro feature that allows you to create multi-file projects. Would you like to upgrade to Pro now?"
+                    )
+                  ) {
                     window.location.href = "/pricing";
                   }
                 }
@@ -67,11 +69,15 @@ function Header({
               className={`p-2 rounded-lg transition-colors relative flex items-center ${
                 activeMode === "project"
                   ? "bg-purple-600 text-white"
-                  : isPro 
-                    ? "text-gray-400 hover:text-white hover:bg-gray-700" 
+                  : isPro
+                    ? "text-gray-400 hover:text-white hover:bg-gray-700"
                     : "text-gray-600 hover:text-gray-400 cursor-pointer"
               }`}
-              title={!isPro ? "Upgrade to Pro to access Project Mode" : "Project Mode"}
+              title={
+                !isPro
+                  ? "Upgrade to Pro to access Project Mode"
+                  : "Project Mode"
+              }
             >
               <FolderOpen className="w-4 h-4" />
               {!isPro && (
@@ -94,9 +100,9 @@ function Header({
         <nav className="flex-1 flex justify-center gap-3">
           <Link
             href="/snippets"
-            className={`px-4 py-1.5 rounded-md transition-all duration-200 ${
-              pathname === "/snippets" 
-                ? "bg-purple-600 text-white" 
+            className={`text-gray-300 hover:text-white transition-colors text-sm font-medium tracking-wide px-4 py-1.5 rounded-md ${
+              pathname === "/snippets"
+                ? "bg-purple-600 text-white font-medium tracking-wide"
                 : "text-gray-300 hover:text-white"
             }`}
           >
@@ -105,10 +111,10 @@ function Header({
           {isPro ? (
             <Link
               href="/library"
-              className={`px-4 py-1.5 rounded-md transition-all duration-200 ${
-                pathname === "/library" 
-                  ? "bg-purple-600 text-white" 
-                  : "text-gray-300 hover:text-white"
+              className={`text-gray-300 hover:text-white transition-colors text-sm font-medium tracking-wide px-4 py-1.5 rounded-md ${
+                pathname === "/library"
+                  ? "bg-purple-600 text-white font-medium tracking-wide"
+                  : ""
               }`}
             >
               PROJECT SHOWCASE
@@ -130,7 +136,7 @@ function Header({
           )}
         </nav>
         <div className="flex items-center">
-          <div className="flex items-center gap-3 px-3 py-1.5 bg-gray-800 rounded-md mr-3">
+          <div className="flex items-center gap-3 px-3 py-1.5 rounded-md">
             <ThemeSelector />
             {showLanguageSelector && activeMode === "single" && (
               <>
@@ -138,13 +144,11 @@ function Header({
                 <LanguageSelector />
               </>
             )}
-            <div className="h-4 w-px bg-gray-600" />
-            {/* <FontSizeControl /> */}
           </div>
           {!isPro && (
             <Link
               href="/pricing"
-              className="group relative flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-gray-800 text-yellow-500 hover:bg-gray-700 transition-all duration-200"
+              className="group relative flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-gray-800 text-yellow-500 hover:bg-gray-700 transition-all duration-200 mx-5"
             >
               <Sparkles className="w-3.5 h-3.5 opacity-70 group-hover:opacity-100" />
               <span className="text-sm font-medium">Pro</span>

@@ -36,7 +36,7 @@ const getFileIcon = (fileName: string) => {
         swift: "/swift.png",
         sh: "/bash.png"
     };
-    const iconSrc = iconMap[extension || ''] || "/logo.png";
+    const iconSrc = iconMap[extension || ''] || "/Code-Nest-new.png";
     return (
         <Image
             src={iconSrc}

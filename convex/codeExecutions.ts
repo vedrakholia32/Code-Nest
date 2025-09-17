@@ -114,3 +114,10 @@ export const getUserStats = query({
     };
   },
 });
+
+export const getTotalExecutions = query({
+  handler: async (ctx) => {
+    const executions = await ctx.db.query("codeExecutions").collect();
+    return executions.length;
+  },
+});

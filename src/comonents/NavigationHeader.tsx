@@ -22,10 +22,10 @@ function NavigationHeader() {
               whileHover={{ scale: 1.02 }}
             >
               <Image
-                src="/logo.png"
+                src="/Code-Nest-new.png"
                 alt="CodeNest"
-                width={32}
-                height={32}
+                width={34}
+                height={34}
                 className="rounded-lg"
               />
               <span className="text-lg font-bold text-white">CodeNest</span>

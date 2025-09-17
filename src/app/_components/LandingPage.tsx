@@ -8,8 +8,20 @@ import {
   Play, 
   Search
 } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 export default function LandingPage() {
+  // Fetch real-time stats from database
+  const snippets = useQuery(api.snippets.getSnippets);
+  const totalExecutions = useQuery(api.codeExecutions.getTotalExecutions);
+  
+  // Calculate stats
+  const snippetCount = snippets?.length || 0;
+  const executionCount = totalExecutions || 0;
+  const languageCount = snippets ? new Set(snippets.map(s => s.language)).size : 0;
+  const developerCount = snippets ? new Set(snippets.map(s => s.userName)).size : 0;
+
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
       {/* Flowing Abstract Background */}
@@ -99,7 +111,7 @@ export default function LandingPage() {
               whileHover={{ scale: 1.02 }}
             >
               <Image
-                src="/logo.png"
+                src="/Code-Nest-new.png"
                 alt="CodeNest"
                 width={32}
                 height={32}
@@ -120,7 +132,7 @@ export default function LandingPage() {
       </motion.header>
 
       {/* Main Content */}
-      <div className="relative z-10 px-6">
+      <div className="relative z-10 px-6 -mt-16">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-16 items-center min-h-screen">
             {/* Left Content */}
@@ -152,15 +164,6 @@ export default function LandingPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.8 }}
               >
-                <div className="relative group">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-indigo-400 transition-colors" />
-                  <input
-                    type="text"
-                    placeholder="Search for code snippets, projects..."
-                    className="w-full bg-gray-900/50 border border-gray-700 rounded-full py-4 pl-12 pr-6 text-white placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 backdrop-blur-sm transition-all duration-300 hover:bg-gray-800/50"
-                  />
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-500/10 to-purple-500/10 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                </div>
               </motion.div>
 
               {/* CTA Buttons */}
@@ -211,7 +214,7 @@ export default function LandingPage() {
                 
                 {/* Content Card */}
                 <motion.div 
-                  className="bg-gray-900/30 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50 transform -translate-y-20"
+                  className="bg-gray-900/30 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50 transform -translate-y-10"
                   animate={{ 
                     y: [0, -10, 0],
                   }}
@@ -336,18 +339,18 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
-                title: "Python Data Analysis",
+                title: "Fibonacci Sequence",
                 language: "Python",
-                author: "DataScientist",
+                author: "PythonMaster",
                 likes: 245,
-                code: "import pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('data.csv')\nprint(df.head())"
+                code: "def fibonacci(n):\n    if n <= 1:\n        return n\n    return fibonacci(n-1) + fibonacci(n-2)\n\nfor i in range(10):\n    print(fibonacci(i))"
               },
               {
-                title: "React Component",
+                title: "Binary Search Algorithm",
                 language: "JavaScript",
-                author: "ReactDev",
+                author: "AlgoExpert",
                 likes: 189,
-                code: "function Button({ children, onClick }) {\n  return (\n    <button onClick={onClick}>\n      {children}\n    </button>\n  );\n}"
+                code: "function binarySearch(arr, target) {\n  let left = 0, right = arr.length - 1;\n  while (left <= right) {\n    let mid = Math.floor((left + right) / 2);\n    if (arr[mid] === target) return mid;\n    arr[mid] < target ? left = mid + 1 : right = mid - 1;\n  }\n  return -1;\n}"
               },
               {
                 title: "Quick Sort Algorithm",
@@ -405,10 +408,10 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
-              { number: "10K+", label: "Code Snippets" },
-              { number: "10+", label: "Languages" },
-              { number: "5K+", label: "Developers" },
-              { number: "100K+", label: "Executions" }
+              { number: snippetCount > 0 ? `${snippetCount}+` : "0", label: "Code Snippets" },
+              { number: languageCount > 0 ? `${languageCount}+` : "0", label: "Languages" },
+              { number: developerCount > 0 ? `${developerCount}+` : "0", label: "Developers" },
+              { number: executionCount > 0 ? `${executionCount}+` : "0", label: "Executions" }
             ].map((stat, index) => (
               <motion.div
                 key={index}

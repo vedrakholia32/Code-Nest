@@ -21,10 +21,10 @@ export const metadata: Metadata = {
   description: "Share and Run Code Snippets",
   icons: {
     icon: [
-      { url: '/logo.png', sizes: '32x32', type: 'image/png' },
+      { url: '/Code-Nest-new.png', sizes: '32x32', type: 'image/png' },
       // { url: '/logo.jpg', sizes: 'any', type: 'image/jpeg' },
     ],
-    apple: '/logo.png',
+    apple: '/Code-Nest-new.png',
   },
 };
 
