@@ -99,13 +99,13 @@ export default function ProjectManager({ onProjectSelect, selectedProjectId }: P
 
   if (!projects) {
     return (
-      <div className={`bg-[#1e1e2e] border-r border-[#313244] h-full ${
+      <div className={`bg-white/5 backdrop-blur-sm border-r border-white/10 h-full ${
         isCollapsed ? 'w-15' : 'w-80'
-      }`}>
+      } m-2 rounded-xl`}>
         <div className="p-2">
           <div className="animate-pulse space-y-2">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-8 bg-[#262637] rounded"></div>
+              <div key={i} className="h-8 bg-white/10 rounded"></div>
             ))}
           </div>
         </div>
@@ -114,9 +114,9 @@ export default function ProjectManager({ onProjectSelect, selectedProjectId }: P
   }
 
   return (
-    <div className={`bg-[#1e1e2e] border-r border-[#313244] h-full overflow-y-auto transition-all duration-300 ${
+    <div className={`bg-white/5 backdrop-blur-sm border-r border-white/10 h-full overflow-y-auto transition-all duration-300 ${
       isCollapsed ? 'w-15' : 'w-80'
-    }`}>
+    } m-2 rounded-xl`}>
       {/* Header with collapse button */}
       <div className="p-2 border-b border-[#313244] flex items-center justify-between">
         {!isCollapsed && (
@@ -124,7 +124,7 @@ export default function ProjectManager({ onProjectSelect, selectedProjectId }: P
         )}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-1.5 hover:bg-[#2a2a3a] rounded transition-colors ml-auto"
+          className="p-1.5 hover:bg-white/10 rounded transition-colors ml-auto"
           title={isCollapsed ? "Expand Projects" : "Collapse Projects"}
         >
           {isCollapsed ? (
@@ -141,7 +141,7 @@ export default function ProjectManager({ onProjectSelect, selectedProjectId }: P
           {/* Create Project Button */}
           <button
             onClick={() => setShowCreateForm(true)}
-            className="w-full p-3 mb-4 bg-[#7c3aed] hover:bg-[#6d28d9] rounded-lg transition-colors flex items-center justify-center gap-2"
+            className="w-full p-3 mb-4 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors flex items-center justify-center gap-2"
           >
             <Plus className="w-4 h-4 text-white" />
             <span className="text-sm font-medium text-white">New Project</span>
@@ -152,9 +152,9 @@ export default function ProjectManager({ onProjectSelect, selectedProjectId }: P
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-[#262637] p-4 rounded-lg border border-[#414155] mb-4"
+              className="bg-white/10 backdrop-blur-sm border border-white/20 p-4 rounded-lg mb-4"
             >
-              <h3 className="text-sm font-semibold text-[#e6edf3] mb-3">Create New Project</h3>
+              <h3 className="text-sm font-semibold text-white mb-3">Create New Project</h3>
               
               <div className="space-y-3">
                 <input
@@ -162,7 +162,7 @@ export default function ProjectManager({ onProjectSelect, selectedProjectId }: P
                   placeholder="Project name"
                   value={newProject.name}
                   onChange={(e) => setNewProject(prev => ({ ...prev, name: e.target.value }))}
-                  className="w-full px-3 py-2 bg-[#1e1e2e] border border-[#414155] rounded text-white text-sm"
+                  className="w-full px-3 py-2 bg-white/5 backdrop-blur-sm border border-white/20 rounded text-white text-sm placeholder-gray-400"
                 />
                 
                 <textarea

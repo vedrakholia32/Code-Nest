@@ -16,8 +16,7 @@ import {
   User,
   Globe,
   Eye,
-  Sparkles,
-  Lock,
+  Sparkles
 } from "lucide-react";
 import NavigationHeader from "@/comonents/NavigationHeader";
 import Image from "next/image";

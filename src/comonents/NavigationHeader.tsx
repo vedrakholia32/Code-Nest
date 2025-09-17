@@ -1,121 +1,68 @@
+"use client";
+
 import HeaderProfileBtn from "@/app/(root)/_components/HeaderProfileBtn";
-import { SignedOut } from "@clerk/nextjs";
-import { Sparkles } from "lucide-react";
+import { SignedOut, SignInButton } from "@clerk/nextjs";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 
 function NavigationHeader() {
   return (
-    <div className="sticky top-0 z-50 w-full border-b border-gray-800/50 bg-gray-950/80 backdrop-blur-xl backdrop-saturate-150">
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5" />
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="relative h-16 flex items-center justify-between">
-          <div className="flex items-center gap-8">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 group relative">
-              {/* logo hover effect */}
-              <div
-                className="absolute -inset-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg opacity-0 
-                group-hover:opacity-100 transition-all duration-500 blur-xl"
-              />
-
-              {/* Logo */}
+    <motion.header 
+      className="sticky top-0 z-50 w-full bg-gray-900 border-b border-gray-800"
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6 }}
+    >
+      <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="flex justify-between items-center">
+          <Link href="/">
+            <motion.div 
+              className="flex items-center gap-3 cursor-pointer"
+              whileHover={{ scale: 1.02 }}
+            >
               <Image
                 src="/logo.png"
-                alt="CodeNest Logo"
-                width={48}
-                height={48}
-                className="w-12 h-12 object-contain transform -rotate-6 group-hover:rotate-0 transition-transform duration-500 rounded-3xl"
-                draggable={false}
+                alt="CodeNest"
+                width={32}
+                height={32}
+                className="rounded-lg"
               />
-              <div className="relative flex flex-col">
-                <span className="block text-lg font-semibold text-[#b3b3b3] group-hover:text-[#e0e0e0] transition-colors duration-300">
-                  CodeNest
-                </span>
-                <span className="block text-xs font-medium text-[#b3b3b3] group-hover:text-[#e0e0e0] transition-colors duration-300">
-                  Interactive Code Editor
-                </span>
-              </div>
+              <span className="text-lg font-bold text-white">CodeNest</span>
+            </motion.div>
+          </Link>
+          
+          <nav className="hidden md:flex items-center gap-8">
+            <Link href="/" className="text-gray-300 hover:text-white transition-colors text-sm font-medium tracking-wide">
+              HOME
             </Link>
-
-            {/* Home Link */}
-            <Link
-              href="/"
-              className="relative rounded-xl group flex items-center gap-2 px-4 py-1.5 
-                border border-[#313244]/50 hover:border-[#414155] 
-                bg-[#1e1e2e]/80 hover:bg-[#1e1e2e] 
-                transition-all duration-300"
-            >
-              <div
-                className="absolute inset-0 bg-gradient-to-r from-blue-500/10 
-                to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
-              />
-              <span className="text-sm font-medium text-gray-400 group-hover:text-blue-400 
-                relative z-10 transition-colors">
-                Home
-              </span>
+            <Link href="/snippets" className="text-gray-300 hover:text-white transition-colors text-sm font-medium tracking-wide">
+              CODE GALLERY
             </Link>
-
-            {/* Code Gallery Link */}
-            <Link
-              href="/snippets"
-              className="relative rounded-xl group flex items-center gap-2 px-4 py-1.5 
-                border border-[#313244]/50 hover:border-[#414155] 
-                bg-[#1e1e2e]/80 hover:bg-[#1e1e2e] 
-                transition-all duration-300"
-            >
-              <div
-                className="absolute inset-0 bg-gradient-to-r from-blue-500/10 
-                to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
-              />
-              <span className="text-sm font-medium text-gray-400 group-hover:text-blue-400 
-                relative z-10 transition-colors">
-                Code Gallery
-              </span>
+            <Link href="/library" className="text-gray-300 hover:text-white transition-colors text-sm font-medium tracking-wide">
+              PROJECTS
             </Link>
-
-            {/* Project Showcase Link */}
-            <Link
-              href="/library"
-              className="relative rounded-xl group flex items-center gap-2 px-4 py-1.5 
-                border border-[#313244]/50 hover:border-[#414155] 
-                bg-[#1e1e2e]/80 hover:bg-[#1e1e2e] 
-                transition-all duration-300"
-            >
-              <div
-                className="absolute inset-0 bg-gradient-to-r from-purple-500/10 
-                to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
-              />
-              <span className="text-sm font-medium text-gray-400 group-hover:text-purple-400 
-                relative z-10 transition-colors">
-                Project Showcase
-              </span>
+            <Link href="/pricing" className="text-gray-300 hover:text-white transition-colors text-sm font-medium tracking-wide">
+              PRICING
             </Link>
-          </div>
-
-          {/* right rection */}
+            <Link href="/profile" className="text-gray-300 hover:text-white transition-colors text-sm font-medium tracking-wide">
+              PROFILE
+            </Link>
+          </nav>
+          
           <div className="flex items-center gap-4">
             <SignedOut>
-              <Link
-                href="/pricing"
-                className="flex items-center gap-2 px-4 py-1.5 rounded-lg border border-amber-500/20
-                 hover:border-amber-500/40 bg-gradient-to-r from-amber-500/10 
-                to-orange-500/10 hover:from-amber-500/20 hover:to-orange-500/20 transition-all 
-                duration-300"
-              >
-                <Sparkles className="w-4 h-4 text-amber-400 hover:text-amber-300" />
-                <span className="text-sm font-medium text-amber-400/90 hover:text-amber-300">
-                  Pro
-                </span>
-              </Link>
+              <SignInButton mode="modal">
+                <button className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium text-sm transition-all duration-300">
+                  SIGN IN
+                </button>
+              </SignInButton>
             </SignedOut>
-
-            {/* profile button */}
             <HeaderProfileBtn />
           </div>
         </div>
       </div>
-    </div>
+    </motion.header>
   );
 }
 

@@ -20,7 +20,7 @@ function Header({
 }) {
   const pathname = usePathname();
   return (
-    <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-[#181825]/95 border-b border-[#232334] shadow-lg">
+    <header className="sticky top-0 z-50 w-full bg-gray-900 border-b border-gray-800 shadow-lg">
       <div className="flex items-center justify-between px-6 py-3">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-3 group relative">
@@ -44,8 +44,8 @@ function Header({
               onClick={() => onModeChange?.("single")}
               className={`p-2 rounded-lg transition-colors flex items-center ${
                 activeMode === "single"
-                  ? "bg-[#7c3aed] text-white"
-                  : "text-gray-400 hover:text-white hover:bg-[#2a2a3a]"
+                  ? "bg-purple-600 text-white"
+                  : "text-gray-400 hover:text-white hover:bg-gray-700"
               }`}
               title="Snippet Mode"
             >
@@ -66,9 +66,9 @@ function Header({
               }}
               className={`p-2 rounded-lg transition-colors relative flex items-center ${
                 activeMode === "project"
-                  ? "bg-[#7c3aed] text-white"
+                  ? "bg-purple-600 text-white"
                   : isPro 
-                    ? "text-gray-400 hover:text-white hover:bg-[#2a2a3a]" 
+                    ? "text-gray-400 hover:text-white hover:bg-gray-700" 
                     : "text-gray-600 hover:text-gray-400 cursor-pointer"
               }`}
               title={!isPro ? "Upgrade to Pro to access Project Mode" : "Project Mode"}
@@ -94,35 +94,35 @@ function Header({
         <nav className="flex-1 flex justify-center gap-3">
           <Link
             href="/snippets"
-            className={`px-4 py-1.5 rounded-md border transition-all duration-200 ${
+            className={`px-4 py-1.5 rounded-md transition-all duration-200 ${
               pathname === "/snippets" 
-                ? "bg-[#7c3aed] text-white border-[#7c3aed]" 
-                : "bg-[#1e1e2e] text-[#b3b3b3] border-[#232334] hover:bg-[#2a2a3a] hover:border-[#343444] hover:text-[#e0e0e0]"
+                ? "bg-purple-600 text-white" 
+                : "text-gray-300 hover:text-white"
             }`}
           >
-            Code Gallery
+            CODE GALLERY
           </Link>
           {isPro ? (
             <Link
               href="/library"
-              className={`px-4 py-1.5 rounded-md border transition-all duration-200 ${
+              className={`px-4 py-1.5 rounded-md transition-all duration-200 ${
                 pathname === "/library" 
-                  ? "bg-[#7c3aed] text-white border-[#7c3aed]" 
-                  : "bg-[#1e1e2e] text-[#b3b3b3] border-[#232334] hover:bg-[#2a2a3a] hover:border-[#343444] hover:text-[#e0e0e0]"
+                  ? "bg-purple-600 text-white" 
+                  : "text-gray-300 hover:text-white"
               }`}
             >
-              Project Showcase
+              PROJECT SHOWCASE
             </Link>
           ) : (
             <div className="relative">
               <button
                 onClick={() => {}}
                 disabled
-                className="px-4 py-1.5 rounded-md bg-[#1e1e2e] text-[#b3b3b3] border border-[#232334] cursor-not-allowed relative opacity-60"
+                className="px-4 py-1.5 rounded-md text-gray-400 cursor-not-allowed relative opacity-60"
                 title="Upgrade to Pro to access Project Showcase"
               >
                 Project Showcase
-                <span className="absolute -top-1 -right-1 text-xs bg-[#eabc60] text-black px-1 py-0.5 rounded font-bold">
+                <span className="absolute -top-1 -right-1 text-xs bg-yellow-500 text-black px-1 py-0.5 rounded font-bold">
                   PRO
                 </span>
               </button>
@@ -130,21 +130,21 @@ function Header({
           )}
         </nav>
         <div className="flex items-center">
-          <div className="flex items-center gap-3 px-3 py-1.5 bg-[#1e1e2e] rounded-md mr-3">
+          <div className="flex items-center gap-3 px-3 py-1.5 bg-gray-800 rounded-md mr-3">
             <ThemeSelector />
             {showLanguageSelector && activeMode === "single" && (
               <>
-                <div className="h-4 w-px bg-[#232334]" />
+                <div className="h-4 w-px bg-gray-600" />
                 <LanguageSelector />
               </>
             )}
-            <div className="h-4 w-px bg-[#232334]" />
+            <div className="h-4 w-px bg-gray-600" />
             {/* <FontSizeControl /> */}
           </div>
           {!isPro && (
             <Link
               href="/pricing"
-              className="group relative flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#1e1e2e] text-[#eabc60] border border-[#eabc60]/20 hover:bg-[#24232f] transition-all duration-200"
+              className="group relative flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-gray-800 text-yellow-500 hover:bg-gray-700 transition-all duration-200"
             >
               <Sparkles className="w-3.5 h-3.5 opacity-70 group-hover:opacity-100" />
               <span className="text-sm font-medium">Pro</span>

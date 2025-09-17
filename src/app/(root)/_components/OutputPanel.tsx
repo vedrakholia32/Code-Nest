@@ -32,19 +32,19 @@ function OutputPanel({
   };
 
   return (
-    <div className="relative h-[calc(100vh-80px)] min-h-[600px] bg-[#181825] p-6 shadow-[inset-8px_0_20px_rgba(255,255,255,0.15)]">
+    <div className="relative h-[calc(100vh-80px)] min-h-[600px] bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl shadow-2xl m-2 p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
       <div className="flex items-center gap-2">
-        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#232334]">
+        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10">
         <Terminal className="w-5 h-5 text-blue-400" />
         </div>
-        <span className="text-base font-semibold text-[#b3b3b3]">Output</span>
+        <span className="text-base font-semibold text-gray-300">Output</span>
       </div>
       {hasContent && (
         <button
         onClick={handleCopy}
-        className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#1e1e2e] text-[#b3b3b3] rounded-md hover:bg-[#2a2a3a] transition-colors"
+        className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/5 backdrop-blur-sm border border-white/10 text-gray-300 rounded-md hover:bg-white/10 transition-colors"
         >
         {isCopied ? (
           <CheckCircle className="w-4 h-4 text-green-500" />
@@ -57,7 +57,7 @@ function OutputPanel({
       </div>
 
       {/* Output or Placeholder */}
-      <div className="relative min-h-[400px] bg-[#232334] rounded-xl">
+      <div className="relative min-h-[400px] bg-black/5 backdrop-blur-sm border border-white/5 rounded-xl">
       {isRunning ? (
         <RunningCodeSkeleton />
       ) : hasContent ? (
@@ -69,9 +69,9 @@ function OutputPanel({
         )}
         </pre>
       ) : (
-        <div className="flex items-center justify-center w-full h-full py-16">
-        <Terminal className="w-10 h-10 text-gray-600 mb-4" />
-        <span className="text-lg text-gray-500">Run your code to see the output here</span>
+        <div className="flex flex-col items-center justify-center w-full h-full py-16">
+        <Terminal className="w-10 h-10 text-gray-500 mb-4" />
+        <span className="text-lg text-gray-400">Run your code to see the output here</span>
         </div>
       )}
       </div>

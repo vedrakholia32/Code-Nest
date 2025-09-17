@@ -2,18 +2,11 @@
 
 import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { 
-  Code, 
   Play, 
-  Share, 
-  Users, 
-  Search,
-  ArrowRight,
-  Sparkles,
-  Star,
-  Monitor,
-  Layers
+  Search
 } from "lucide-react";
 
 export default function LandingPage() {
@@ -116,10 +109,10 @@ export default function LandingPage() {
             </motion.div>
             
             <nav className="hidden md:flex items-center gap-8">
-              <a href="/snippets" className="text-gray-300 hover:text-white transition-colors text-sm font-medium tracking-wide">CODE GALLERY</a>
-              <a href="/library" className="text-gray-300 hover:text-white transition-colors text-sm font-medium tracking-wide">PROJECTS</a>
-              <a href="/pricing" className="text-gray-300 hover:text-white transition-colors text-sm font-medium tracking-wide">PRICING</a>
-              <a href="/profile" className="text-gray-300 hover:text-white transition-colors text-sm font-medium tracking-wide">PROFILE</a>
+              <Link href="/snippets" className="text-gray-300 hover:text-white transition-colors text-sm font-medium tracking-wide">CODE GALLERY</Link>
+              <Link href="/library" className="text-gray-300 hover:text-white transition-colors text-sm font-medium tracking-wide">PROJECTS</Link>
+              <Link href="/pricing" className="text-gray-300 hover:text-white transition-colors text-sm font-medium tracking-wide">PRICING</Link>
+              <Link href="/profile" className="text-gray-300 hover:text-white transition-colors text-sm font-medium tracking-wide">PROFILE</Link>
             </nav>
             
             <div className="flex items-center gap-4">

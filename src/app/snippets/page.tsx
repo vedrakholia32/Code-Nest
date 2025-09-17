@@ -5,6 +5,7 @@ import { api } from "../../../convex/_generated/api";
 import { useState } from "react";
 import SnippetsPageSkeleton from "./_components/SnippetsPageSkeleton";
 import AuthWrapper from "../_components/AuthWrapper";
+import FlowingBackground from "../_components/FlowingBackground";
 import { AnimatePresence, motion } from "framer-motion";
 import { BookOpen, Code, Grid, Layers, Search, Tag, X } from "lucide-react";
 import NavigationHeader from "@/comonents/NavigationHeader";
@@ -20,9 +21,12 @@ function SnippetsPageContent() {
   // loading state
   if (snippets === undefined) {
     return (
-      <div className="min-h-screen">
-        <NavigationHeader />
-        <SnippetsPageSkeleton />
+      <div className="min-h-screen bg-gray-950 relative overflow-hidden">
+        <FlowingBackground variant="minimal" />
+        <div className="relative z-10">
+          <NavigationHeader />
+          <SnippetsPageSkeleton />
+        </div>
       </div>
     );
   }
@@ -43,40 +47,42 @@ function SnippetsPageContent() {
   });
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f]">
-      <NavigationHeader />
+    <div className="min-h-screen bg-gray-950 relative overflow-hidden">
+      <FlowingBackground variant="secondary" />
+      
+      <div className="relative z-10">
+        <NavigationHeader />
 
-      <div className="relative max-w-7xl mx-auto px-4 py-12">
-        {/* Hero */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="group">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r
-               from-blue-500/10 to-purple-500/10 text-sm text-[#b3b3b3] group-hover:text-[#e0e0e0] transition-colors duration-300 mb-6"
-            >
-              <BookOpen className="w-4 h-4" />
-              Community Code Gallery
-            </motion.div>
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-4xl md:text-5xl font-bold text-[#b3b3b3] group-hover:text-[#e0e0e0] transition-colors duration-300 mb-6"
-            >
-              Code Gallery
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="text-lg text-[#b3b3b3] group-hover:text-[#e0e0e0] transition-colors duration-300 mb-8"
-            >
-              Explore a curated collection of code snippets from the community
-            </motion.p>
+        <div className="relative max-w-7xl mx-auto px-4 py-12">
+          {/* Hero */}
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="group">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/20 backdrop-blur-sm border border-white/10 text-sm text-gray-300 group-hover:text-white transition-colors duration-300 mb-6"
+              >
+                <BookOpen className="w-4 h-4" />
+                Community Code Gallery
+              </motion.div>
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-300 text-transparent bg-clip-text mb-6"
+              >
+                Code Gallery
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="text-lg text-gray-400 mb-8"
+              >
+                Explore a curated collection of code snippets from the community
+              </motion.p>
+            </div>
           </div>
-        </div>
 
         {/* Filters Section */}
         <div className="relative max-w-5xl mx-auto mb-12 space-y-6">
@@ -229,6 +235,7 @@ function SnippetsPageContent() {
             </div>
           </motion.div>
         )}
+        </div>
       </div>
     </div>
   );

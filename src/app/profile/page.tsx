@@ -6,6 +6,7 @@ import { useState } from "react";
 import { api } from "../../../convex/_generated/api";
 import AuthWrapper from "../_components/AuthWrapper";
 import NavigationHeader from "@/comonents/NavigationHeader";
+import FlowingBackground from "../_components/FlowingBackground";
 import ProfileHeader from "./_components/ProfileHeader";
 import ProfileHeaderSkeleton from "./_components/ProfileHeaderSkeleton";
 import {
@@ -73,19 +74,22 @@ function ProfilePageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f]">
-      <NavigationHeader />
+    <div className="min-h-screen bg-gray-950 relative overflow-hidden">
+      <FlowingBackground variant="secondary" />
+      
+      <div className="relative z-10">
+        <NavigationHeader />
 
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        {/* Profile Header */}
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          {/* Profile Header */}
 
-        {userStats && userData && (
-          <ProfileHeader
-            userStats={userStats}
-            userData={userData}
-            user={user!}
-          />
-        )}
+          {userStats && userData && (
+            <ProfileHeader
+              userStats={userStats}
+              userData={userData}
+              user={user!}
+            />
+          )}
 
         {(userStats === undefined || !isLoaded) && <ProfileHeaderSkeleton />}
 
@@ -345,6 +349,8 @@ function ProfilePageContent() {
             </motion.div>
           </AnimatePresence>
         </div>
+      </div>
+      
       </div>
     </div>
   );

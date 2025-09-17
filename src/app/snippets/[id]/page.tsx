@@ -7,6 +7,7 @@ import { Id } from "../../../../convex/_generated/dataModel";
 import AuthWrapper from "../../_components/AuthWrapper";
 import SnippetLoadingSkeleton from "./_components/SnippetLoadingSkeleton";
 import NavigationHeader from "@/comonents/NavigationHeader";
+import FlowingBackground from "../../_components/FlowingBackground";
 import { ArrowLeft, Clock, Code, MessageSquare, User } from "lucide-react";
 import { Editor } from "@monaco-editor/react";
 import Link from "next/link";
@@ -28,26 +29,29 @@ function SnippetDetailPageContent() {
   if (snippet === undefined) return <SnippetLoadingSkeleton />;
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f]">
-      <NavigationHeader />
+    <div className="min-h-screen bg-gray-950 relative overflow-hidden">
+      <FlowingBackground variant="minimal" />
+      
+      <div className="relative z-10">
+        <NavigationHeader />
 
-      <main className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
-        <div className="max-w-[1200px] mx-auto">
-          {/* Back Link */}
-          <Link
-            href="/snippets"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Code Gallery
-          </Link>
+        <main className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+          <div className="max-w-[1200px] mx-auto">
+            {/* Back Link */}
+            <Link
+              href="/snippets"
+              className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Code Gallery
+            </Link>
 
-          {/* Header */}
-          <div className="bg-[#121218] border border-[#ffffff0a] rounded-2xl p-6 sm:p-8 mb-6 backdrop-blur-xl">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center justify-center size-12 rounded-xl bg-[#ffffff08] p-2.5">
-                  <Image
+            {/* Header */}
+            <div className="bg-black/20 backdrop-blur-sm border border-white/10 rounded-2xl p-6 sm:p-8 mb-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-center size-12 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 p-2.5">
+                    <Image
                     src={`/${snippet.language}.png`}
                     alt={`${snippet.language} logo`}
                     width={48}
@@ -84,7 +88,7 @@ function SnippetDetailPageContent() {
           </div>
 
           {/* Code Editor */}
-          <div className="mb-8 rounded-2xl overflow-hidden border border-[#ffffff0a] bg-[#121218]">
+          <div className="mb-8 overflow-hidden border border-[#ffffff0a] bg-[#121218]">
             <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-[#ffffff0a]">
               <div className="flex items-center gap-2 text-[#808086]">
                 <Code className="w-4 h-4" />
@@ -115,6 +119,8 @@ function SnippetDetailPageContent() {
           <Comments snippetId={snippet._id} />
         </div>
       </main>
+      
+      </div>
     </div>
   );
 }

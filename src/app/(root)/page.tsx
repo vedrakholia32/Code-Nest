@@ -12,8 +12,8 @@ import { api } from "../../../convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
 import { Id } from "../../../convex/_generated/dataModel";
 import LandingPage from "../_components/LandingPage";
-import Link from "next/link";
-import { Sparkles, Code, FolderOpen } from "lucide-react";
+import FlowingBackground from "../_components/FlowingBackground";
+import { FolderOpen } from "lucide-react";
 
 export default function Home() {
   // All hooks must be called at the top level, before any early returns
@@ -31,10 +31,13 @@ export default function Home() {
   // Show loading state while Clerk is loading
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-950 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-400">Loading...</p>
+      <div className="min-h-screen bg-gray-950 relative overflow-hidden">
+        <FlowingBackground variant="minimal" />
+        <div className="relative z-10 min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-400">Loading...</p>
+          </div>
         </div>
       </div>
     );
@@ -51,60 +54,65 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen">
-      <Header 
-        isPro={isPro} 
-        showLanguageSelector={activeMode === "single"} 
-        activeMode={activeMode}
-        onModeChange={setActiveMode}
-      />
+    <div className="min-h-screen bg-gray-950 relative overflow-hidden">
+      <FlowingBackground variant="secondary" />
+      
+      <div className="relative z-10">
+        <Header 
+          isPro={isPro} 
+          showLanguageSelector={activeMode === "single"} 
+          activeMode={activeMode}
+          onModeChange={setActiveMode}
+        />
 
-      <div className="h-[calc(100vh-80px)] w-full">
-        {activeMode === "single" ? (
-          <ResizablePanel
-            leftPanel={<EditorPanel />}
-            rightPanel={<OutputPanel />}
-            initialRatio={0.8}
-            minLeftWidth={45}
-            minRightWidth={20}
-          />
-        ) : (
-          <div className="flex h-full">
-            <CollapsibleProjectManager
-              onProjectSelect={setSelectedProjectId}
-              selectedProjectId={selectedProjectId}
+        <div className="h-[calc(100vh-80px)] w-full">
+          {activeMode === "single" ? (
+            <ResizablePanel
+              leftPanel={<EditorPanel />}
+              rightPanel={<OutputPanel />}
+              initialRatio={0.8}
+              minLeftWidth={45}
+              minRightWidth={20}
             />
-            {selectedProjectId ? (
-              <ResizablePanel
-                leftPanel={
-                  <MultiFileEditor
-                    projectId={selectedProjectId as Id<"projects">}
-                    onRunResult={handleProjectRunResult}
-                  />
-                }
-                rightPanel={
-                  <OutputPanel
-                    output={projectOutput}
-                    error={projectError}
-                    isProjectMode={true}
-                  />
-                }
-                initialRatio={0.75}
-                minLeftWidth={50}
-                minRightWidth={25}
+          ) : (
+            <div className="flex h-full">
+              <CollapsibleProjectManager
+                onProjectSelect={setSelectedProjectId}
+                selectedProjectId={selectedProjectId}
               />
-            ) : (
-              <div className="flex-1 flex items-center justify-center bg-[#0a0a0f] text-gray-500">
-                <div className="text-center">
-                  <h3 className="text-lg font-semibold mb-2">
-                    No project selected
-                  </h3>
-                  <p>Select or create a project to start coding</p>
+              {selectedProjectId ? (
+                <ResizablePanel
+                  leftPanel={
+                    <MultiFileEditor
+                      projectId={selectedProjectId as Id<"projects">}
+                      onRunResult={handleProjectRunResult}
+                    />
+                  }
+                  rightPanel={
+                    <OutputPanel
+                      output={projectOutput}
+                      error={projectError}
+                      isProjectMode={true}
+                    />
+                  }
+                  initialRatio={0.75}
+                  minLeftWidth={50}
+                  minRightWidth={25}
+                />
+              ) : (
+                <div className="flex-1 flex items-center justify-center bg-white/5 backdrop-blur-sm border border-white/10 text-gray-300 m-2 rounded-xl">
+                  <div className="text-center">
+                    <FolderOpen className="w-16 h-16 mx-auto mb-4 text-purple-400/60" />
+                    <h3 className="text-xl font-semibold mb-2 text-white">
+                      No project selected
+                    </h3>
+                    <p className="text-gray-400">Select or create a project to start coding</p>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        )}
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
