@@ -85,7 +85,7 @@ export default function LandingPage() {
         </motion.div>
       </div>
 
-      {/* Header */}
+      {/* Simple Header */}
       <motion.header 
         className="relative z-50 px-6 py-6"
         initial={{ y: -50, opacity: 0 }}
@@ -108,13 +108,6 @@ export default function LandingPage() {
               <span className="text-lg font-bold">CodeNest</span>
             </motion.div>
             
-            <nav className="hidden md:flex items-center gap-8">
-              <Link href="/snippets" className="text-gray-300 hover:text-white transition-colors text-sm font-medium tracking-wide">CODE GALLERY</Link>
-              <Link href="/library" className="text-gray-300 hover:text-white transition-colors text-sm font-medium tracking-wide">PROJECTS</Link>
-              <Link href="/pricing" className="text-gray-300 hover:text-white transition-colors text-sm font-medium tracking-wide">PRICING</Link>
-              <Link href="/profile" className="text-gray-300 hover:text-white transition-colors text-sm font-medium tracking-wide">PROFILE</Link>
-            </nav>
-            
             <div className="flex items-center gap-4">
               <SignInButton mode="modal">
                 <button className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium text-sm transition-all duration-300">
@@ -129,7 +122,7 @@ export default function LandingPage() {
       {/* Main Content */}
       <div className="relative z-10 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-16 items-center min-h-[80vh]">
+          <div className="grid lg:grid-cols-2 gap-16 items-center min-h-screen">
             {/* Left Content */}
             <motion.div
               className="max-w-2xl"
@@ -138,7 +131,7 @@ export default function LandingPage() {
               transition={{ duration: 1, delay: 0.3 }}
             >
               <motion.h1 
-                className="text-6xl md:text-7xl lg:text-8xl font-bold leading-none mb-8"
+                className="text-5xl md:text-5xl lg:text-7xl font-bold leading-none mb-8"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.5 }}
@@ -209,7 +202,7 @@ export default function LandingPage() {
               <div className="relative">
                 {/* Play Button */}
                 <motion.div
-                  className="absolute top-8 right-8 w-16 h-16 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20"
+                  className="absolute top-5 right-8 w-16 h-16 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -218,7 +211,7 @@ export default function LandingPage() {
                 
                 {/* Content Card */}
                 <motion.div 
-                  className="bg-gray-900/30 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50"
+                  className="bg-gray-900/30 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50 transform -translate-y-20"
                   animate={{ 
                     y: [0, -10, 0],
                   }}
@@ -252,6 +245,216 @@ export default function LandingPage() {
           </div>
         </div>
       </div>
+
+      {/* Features Section */}
+      <section className="relative z-10 py-20 px-6">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              Why Choose CodeNest?
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Everything you need to code, collaborate, and create amazing projects
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                title: "40+ Languages",
+                description: "Support for Python, JavaScript, Java, C++, and many more programming languages",
+                icon: "🚀"
+              },
+              {
+                title: "Real-time Execution",
+                description: "Run your code instantly in the browser with our powerful execution engine",
+                icon: "⚡"
+              },
+              {
+                title: "Share & Collaborate",
+                description: "Share code snippets with the community and collaborate on projects",
+                icon: "🤝"
+              },
+              {
+                title: "Project Management",
+                description: "Organize your code into projects and manage multiple files effortlessly",
+                icon: "📁"
+              },
+              {
+                title: "Code Gallery",
+                description: "Explore thousands of code snippets shared by developers worldwide",
+                icon: "🎨"
+              },
+              {
+                title: "Modern IDE",
+                description: "Professional code editor with syntax highlighting and autocomplete",
+                icon: "💻"
+              }
+            ].map((feature, index) => (
+              <motion.div
+                key={index}
+                className="bg-gray-900/30 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.02 }}
+              >
+                <div className="text-4xl mb-4">{feature.icon}</div>
+                <h3 className="text-xl font-semibold mb-3 text-white">{feature.title}</h3>
+                <p className="text-gray-300">{feature.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Code Gallery Preview */}
+      <section className="relative z-10 py-20 px-6 bg-gray-900/20">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+              Code Gallery
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Discover amazing code snippets created by our community
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                title: "Python Data Analysis",
+                language: "Python",
+                author: "DataScientist",
+                likes: 245,
+                code: "import pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('data.csv')\nprint(df.head())"
+              },
+              {
+                title: "React Component",
+                language: "JavaScript",
+                author: "ReactDev",
+                likes: 189,
+                code: "function Button({ children, onClick }) {\n  return (\n    <button onClick={onClick}>\n      {children}\n    </button>\n  );\n}"
+              },
+              {
+                title: "Quick Sort Algorithm",
+                language: "C++",
+                author: "AlgoMaster",
+                likes: 312,
+                code: "void quickSort(int arr[], int low, int high) {\n  if (low < high) {\n    int pi = partition(arr, low, high);\n    quickSort(arr, low, pi - 1);\n  }\n}"
+              }
+            ].map((snippet, index) => (
+              <motion.div
+                key={index}
+                className="bg-gray-900/40 backdrop-blur-xl rounded-2xl overflow-hidden border border-gray-700/50 hover:border-blue-500/50 transition-all duration-300"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.02 }}
+              >
+                <div className="p-4 border-b border-gray-700/50">
+                  <h3 className="font-semibold text-white mb-2">{snippet.title}</h3>
+                  <div className="flex items-center gap-4 text-sm text-gray-400">
+                    <span>{snippet.language}</span>
+                    <span>by {snippet.author}</span>
+                    <span>❤️ {snippet.likes}</span>
+                  </div>
+                </div>
+                <div className="p-4 bg-black/20">
+                  <pre className="text-sm text-gray-300 font-mono overflow-hidden">
+                    {snippet.code}
+                  </pre>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            className="text-center mt-12"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            <Link
+              href="/snippets"
+              className="inline-flex items-center px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-all duration-300"
+            >
+              Explore Full Gallery →
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="relative z-10 py-20 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            {[
+              { number: "10K+", label: "Code Snippets" },
+              { number: "10+", label: "Languages" },
+              { number: "5K+", label: "Developers" },
+              { number: "100K+", label: "Executions" }
+            ].map((stat, index) => (
+              <motion.div
+                key={index}
+                className="bg-gray-900/30 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50"
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <div className="text-3xl md:text-4xl font-bold text-blue-400 mb-2">
+                  {stat.number}
+                </div>
+                <div className="text-gray-300">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="relative z-10 py-20 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              Ready to Start Coding?
+            </h2>
+            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+              Join thousands of developers who trust CodeNest for their coding projects
+            </p>
+            <SignUpButton mode="modal">
+              <motion.button
+                className="px-10 py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl font-semibold text-lg transition-all duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Get Started for Free
+              </motion.button>
+            </SignUpButton>
+          </motion.div>
+        </div>
+      </section>
 
       {/* Bottom Navigation Indicator */}
       <motion.div
