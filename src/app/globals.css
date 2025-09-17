@@ -184,6 +184,67 @@
   animation: gradient-shift 3s ease infinite;
 }
 
+/* Missing Animation Classes */
+.text-gradient {
+  background: linear-gradient(135deg, #8b5cf6, #06b6d4, #f59e0b);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 3s ease infinite;
+}
+
+.hover-magnetic {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-magnetic:hover {
+  transform: translateZ(0) scale(1.05);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 10px 40px rgba(139, 92, 246, 0.3);
+}
+
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.hover-border-draw {
+  position: relative;
+}
+
+.hover-border-draw::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid transparent;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #8b5cf6, #06b6d4) border-box;
+  mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.hover-border-draw:hover::before {
+  opacity: 1;
+}
+
+.hover-gradient-shift {
+  background-size: 200% 200%;
+  transition: background-position 0.3s ease;
+}
+
+.hover-gradient-shift:hover {
+  background-position: 100% 0;
+}
+
 body {
   background: var(--background);
   color: var(--color-text-primary);
