@@ -39,6 +39,8 @@ export default function CollaborativeEditorWrapper({
   const [lastSyncTime, setLastSyncTime] = useState<number>(0);
   const pendingOperationsRef = useRef<string[]>([]);
   const isApplyingRemoteChange = useRef(false);
+  const lastKnownContent = useRef<string>('');
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
   // Convex hooks
   const documentState = useQuery(api.collaboration.getDocumentState, { roomId });
@@ -70,28 +72,40 @@ export default function CollaborativeEditorWrapper({
     initDoc();
   }, [user, documentState, defaultContent, roomId, initializeDocument, isInitialized]);
 
-  // Apply remote operations to Monaco editor
+  // Apply remote operations to Monaco editor - improved to prevent conflicts
   useEffect(() => {
-    if (!recentOperations || !editorRef.current || !user) return;
+    if (!recentOperations || !editorRef.current || !user || recentOperations.length === 0) return;
 
     const editor = editorRef.current;
     const model = editor.getModel();
     if (!model || isApplyingRemoteChange.current) return;
 
-    console.log('Applying remote operations:', recentOperations.length);
+    console.log('Processing remote operations:', recentOperations.length);
+
+    // Only apply operations that are genuinely new
+    const newOperations = recentOperations.filter(op => {
+      // Skip our own operations
+      if (op.userId === user.id) return false;
+      
+      // Skip already processed operations
+      if (pendingOperationsRef.current.includes(op.operationId)) return false;
+      
+      // Skip operations older than what we've seen
+      return op.timestamp > lastSyncTime;
+    });
+
+    if (newOperations.length === 0) return;
+
+    console.log('Applying', newOperations.length, 'new remote operations');
 
     isApplyingRemoteChange.current = true;
 
-    recentOperations.forEach((op) => {
-      // Skip operations from current user
-      if (op.userId === user.id) return;
-      
-      // Skip operations we've already processed
-      if (pendingOperationsRef.current.includes(op.operationId)) return;
-
+    newOperations.forEach((op) => {
       const { operation } = op;
       
       try {
+        console.log(`Applying remote ${operation.type} at position ${operation.position}`);
+        
         switch (operation.type) {
           case 'insert':
             if (operation.content) {
@@ -141,22 +155,30 @@ export default function CollaborativeEditorWrapper({
             break;
         }
         
+        // Mark operation as processed
         pendingOperationsRef.current.push(op.operationId);
+        
       } catch (error) {
         console.error('Error applying remote operation:', error);
       }
     });
 
     // Update last sync time
-    if (recentOperations.length > 0) {
-      const lastOp = recentOperations[recentOperations.length - 1];
+    if (newOperations.length > 0) {
+      const lastOp = newOperations[newOperations.length - 1];
       setLastSyncTime(lastOp.timestamp);
+      
+      // Update our known content
+      lastKnownContent.current = model.getValue();
     }
 
-    isApplyingRemoteChange.current = false;
-  }, [recentOperations, user]);
+    // Reset the flag after a short delay to allow Monaco to process
+    setTimeout(() => {
+      isApplyingRemoteChange.current = false;
+    }, 100);
+  }, [recentOperations, user, lastSyncTime]);
 
-  // Sync document state with Monaco editor
+  // Sync document state with Monaco editor - improved logic to prevent blinking
   useEffect(() => {
     if (!documentState || !editorRef.current || isApplyingRemoteChange.current) return;
 
@@ -165,17 +187,50 @@ export default function CollaborativeEditorWrapper({
     if (!model) return;
 
     const currentContent = model.getValue();
+    const docContent = documentState.content;
     
-    // Only sync if content differs significantly (avoid infinite loops)
-    if (documentState.content !== currentContent && Math.abs(documentState.content.length - currentContent.length) > 0) {
-      console.log('Syncing document state with editor');
-      isApplyingRemoteChange.current = true;
-      model.setValue(documentState.content);
-      isApplyingRemoteChange.current = false;
+    // Only sync if there's a meaningful difference and it's not just our own changes
+    if (docContent !== currentContent && 
+        docContent !== lastKnownContent.current &&
+        !pendingOperationsRef.current.length) {
+      
+      console.log('Syncing document state with editor - length diff:', Math.abs(docContent.length - currentContent.length));
+      
+      // Use a more gentle approach - only update if the difference is substantial
+      if (Math.abs(docContent.length - currentContent.length) > 1 || 
+          (docContent.trim() !== currentContent.trim() && docContent.length > 0)) {
+        
+        isApplyingRemoteChange.current = true;
+        
+        // Store cursor position
+        const position = editor.getPosition();
+        
+        // Set the new content
+        model.setValue(docContent);
+        lastKnownContent.current = docContent;
+        
+        // Restore cursor position if possible
+        if (position && docContent.length >= position.column) {
+          setTimeout(() => {
+            try {
+              editor.setPosition(position);
+            } catch {
+              // If position is invalid, place cursor at end
+              const lineCount = model.getLineCount();
+              const lastLineLength = model.getLineLength(lineCount);
+              editor.setPosition({ lineNumber: lineCount, column: lastLineLength + 1 });
+            }
+          }, 10);
+        }
+        
+        setTimeout(() => {
+          isApplyingRemoteChange.current = false;
+        }, 50);
+      }
     }
   }, [documentState]);
 
-  // Handle editor content changes
+  // Handle editor content changes with debouncing
   const handleContentChange = async (value: string | undefined) => {
     if (!value || !user || !editorRef.current || isApplyingRemoteChange.current) return;
 
@@ -183,36 +238,62 @@ export default function CollaborativeEditorWrapper({
     const model = editor.getModel();
     if (!model) return;
 
-    // Get the current document state
-    const currentDoc = documentState?.content || '';
-    
-    if (value === currentDoc) return; // No change
+    // Update our known content immediately to prevent sync conflicts
+    lastKnownContent.current = value;
 
-    // Calculate the operation
-    const operation = calculateOperation(currentDoc, value);
-    if (!operation) return;
-
-    // Apply operation via Convex
-    const operationId = nanoid();
-    
-    try {
-      const result = await applyOperation({
-        roomId,
-        operation,
-        operationId,
-      });
-      
-      if (result.success) {
-        // Mark this operation as ours to skip in remote updates
-        pendingOperationsRef.current.push(operationId);
-        console.log('Operation applied successfully:', operation);
-      } else {
-        console.warn('Operation failed:', result.reason);
-      }
-      
-    } catch (error) {
-      console.error('Error applying operation:', error);
+    // Clear existing timeout
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
     }
+
+    // Debounce the operation to avoid too many API calls
+    debounceTimeout.current = setTimeout(async () => {
+      // Get the current document state
+      const currentDoc = documentState?.content || '';
+      
+      if (value === currentDoc) return; // No change
+
+      // Calculate the operation
+      const operation = calculateOperation(currentDoc, value);
+      if (!operation) return;
+
+      // Apply operation via Convex
+      const operationId = nanoid();
+      
+      try {
+        console.log('Applying local operation:', operation.type, 'at position', operation.position);
+        
+        const result = await applyOperation({
+          roomId,
+          operation,
+          operationId,
+        });
+        
+        if (result.success) {
+          // Mark this operation as ours to skip in remote updates
+          pendingOperationsRef.current.push(operationId);
+          
+          // Clean up old operation IDs to prevent memory leaks
+          if (pendingOperationsRef.current.length > 50) {
+            pendingOperationsRef.current = pendingOperationsRef.current.slice(-25);
+          }
+        } else {
+          console.warn('Operation failed:', result.reason);
+          // If operation failed, revert to server state
+          if (documentState && documentState.content !== value) {
+            isApplyingRemoteChange.current = true;
+            model.setValue(documentState.content);
+            lastKnownContent.current = documentState.content;
+            setTimeout(() => {
+              isApplyingRemoteChange.current = false;
+            }, 50);
+          }
+        }
+        
+      } catch (error) {
+        console.error('Error applying operation:', error);
+      }
+    }, 300); // 300ms debounce
   };
 
   // Calculate text operation between old and new content
