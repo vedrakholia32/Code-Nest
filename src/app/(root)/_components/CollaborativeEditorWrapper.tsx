@@ -36,7 +36,7 @@ export default function CollaborativeEditorWrapper({
   const { user } = useUser();
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
-  const [lastSyncTime, setLastSyncTime] = useState<number>(0);
+  const [lastProcessedOperation, setLastProcessedOperation] = useState<string | null>(null);
   const pendingOperationsRef = useRef<string[]>([]);
   const isApplyingRemoteChange = useRef(false);
   const lastKnownContent = useRef<string>('');
@@ -45,8 +45,8 @@ export default function CollaborativeEditorWrapper({
   // Convex hooks
   const documentState = useQuery(api.collaboration.getDocumentState, { roomId });
   const recentOperations = useQuery(api.collaboration.getRecentOperations, { 
-    roomId, 
-    since: lastSyncTime 
+    roomId,
+    limit: 20
   });
   const applyOperation = useMutation(api.collaboration.applyOperation);
   const initializeDocument = useMutation(api.collaboration.initializeDocument);
@@ -90,9 +90,9 @@ export default function CollaborativeEditorWrapper({
       // Skip already processed operations
       if (pendingOperationsRef.current.includes(op.operationId)) return false;
       
-      // Skip operations older than what we've seen
-      return op.timestamp > lastSyncTime;
-    });
+      // Only process operations we haven't seen before
+      return !lastProcessedOperation || op.operationId !== lastProcessedOperation;
+    }).slice(-10); // Limit to prevent overwhelming
 
     if (newOperations.length === 0) return;
 
@@ -163,20 +163,25 @@ export default function CollaborativeEditorWrapper({
       }
     });
 
-    // Update last sync time
+    // Update tracking
     if (newOperations.length > 0) {
       const lastOp = newOperations[newOperations.length - 1];
-      setLastSyncTime(lastOp.timestamp);
+      setLastProcessedOperation(lastOp.operationId);
       
       // Update our known content
       lastKnownContent.current = model.getValue();
+      
+      // Clean up old operation tracking
+      if (pendingOperationsRef.current.length > 50) {
+        pendingOperationsRef.current = pendingOperationsRef.current.slice(-25);
+      }
     }
 
     // Reset the flag after a short delay to allow Monaco to process
     setTimeout(() => {
       isApplyingRemoteChange.current = false;
-    }, 100);
-  }, [recentOperations, user, lastSyncTime]);
+    }, 50);
+  }, [recentOperations, user, lastProcessedOperation]);
 
   // Sync document state with Monaco editor - improved logic to prevent blinking
   useEffect(() => {
@@ -246,7 +251,7 @@ export default function CollaborativeEditorWrapper({
       clearTimeout(debounceTimeout.current);
     }
 
-    // Debounce the operation to avoid too many API calls
+    // Debounce the operation to avoid too many API calls but keep it responsive
     debounceTimeout.current = setTimeout(async () => {
       // Get the current document state
       const currentDoc = documentState?.content || '';
@@ -293,7 +298,7 @@ export default function CollaborativeEditorWrapper({
       } catch (error) {
         console.error('Error applying operation:', error);
       }
-    }, 300); // 300ms debounce
+    }, 100); // Reduced from 300ms to 100ms for better responsiveness
   };
 
   // Calculate text operation between old and new content

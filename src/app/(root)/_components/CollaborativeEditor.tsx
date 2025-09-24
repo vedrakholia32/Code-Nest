@@ -29,15 +29,14 @@ const useCollaborativeEditor = ({
   const { user } = useUser();
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
-  const [lastSyncTime, setLastSyncTime] = useState<number>(0);
   const pendingOperationsRef = useRef<string[]>([]);
   const isApplyingRemoteChange = useRef(false);
 
   // Convex hooks
   const documentState = useQuery(api.collaboration.getDocumentState, { roomId });
   const recentOperations = useQuery(api.collaboration.getRecentOperations, { 
-    roomId, 
-    since: lastSyncTime 
+    roomId,
+    limit: 20
   });
   const applyOperation = useMutation(api.collaboration.applyOperation);
   const initializeDocument = useMutation(api.collaboration.initializeDocument);
@@ -138,10 +137,10 @@ const useCollaborativeEditor = ({
       }
     });
 
-    // Update last sync time
+    // Update tracking
     if (recentOperations.length > 0) {
-      const lastOp = recentOperations[recentOperations.length - 1];
-      setLastSyncTime(lastOp.timestamp);
+      // Operations processed successfully
+      console.log('Processed', recentOperations.length, 'operations');
     }
 
     isApplyingRemoteChange.current = false;

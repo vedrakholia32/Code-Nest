@@ -474,22 +474,24 @@ export const initializeDocument = mutation({
 });
 
 // Get recent operations for synchronization
+// Get recent operations for real-time collaboration
 export const getRecentOperations = query({
   args: { 
     roomId: v.string(),
-    since: v.optional(v.number()) // timestamp
+    limit: v.optional(v.number())
   },
   handler: async (ctx, args) => {
-    const sinceTime = args.since || 0;
+    const limit = args.limit || 50;
     
     const operations = await ctx.db
       .query("documentOperations")
       .withIndex("by_room_timestamp", (q) => 
-        q.eq("roomId", args.roomId).gt("timestamp", sinceTime)
+        q.eq("roomId", args.roomId)
       )
-      .order("asc")
-      .take(100); // Limit to prevent huge responses
+      .order("desc") // Most recent first
+      .take(limit);
 
-    return operations;
+    // Return in ascending order (oldest first) for proper application
+    return operations.reverse();
   },
 });
