@@ -58,6 +58,7 @@ function Header({
                 } else {
                   // Show upgrade prompt for non-Pro users
                   if (
+                    typeof window !== 'undefined' && 
                     window.confirm(
                       "Project Mode is a Pro feature that allows you to create multi-file projects. Would you like to upgrade to Pro now?"
                     )

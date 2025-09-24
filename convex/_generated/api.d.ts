@@ -14,6 +14,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as codeExecutions from "../codeExecutions.js";
+import type * as collaboration from "../collaboration.js";
 import type * as files from "../files.js";
 import type * as http from "../http.js";
 import type * as lemonSqueezy from "../lemonSqueezy.js";
@@ -31,6 +32,7 @@ import type * as users from "../users.js";
  */
 declare const fullApi: ApiFromModules<{
   codeExecutions: typeof codeExecutions;
+  collaboration: typeof collaboration;
   files: typeof files;
   http: typeof http;
   lemonSqueezy: typeof lemonSqueezy;

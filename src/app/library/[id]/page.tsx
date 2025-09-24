@@ -151,15 +151,17 @@ export default function PublicProjectPage({ params }: Props) {
         await navigator.share({
           title: project.name,
           text: project.description || `Check out this ${project.language} project`,
-          url: window.location.href,
+          url: typeof window !== 'undefined' ? window.location.href : '',
         });
       } catch (error) {
         console.error("Error sharing:", error);
       }
     } else {
       // Fallback: copy URL to clipboard
-      await navigator.clipboard.writeText(window.location.href);
-      alert("Project URL copied to clipboard!");
+      if (typeof window !== 'undefined') {
+        await navigator.clipboard.writeText(window.location.href);
+        alert("Project URL copied to clipboard!");
+      }
     }
   };
 

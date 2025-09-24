@@ -16,7 +16,7 @@ export default function AuthWrapper({ children, redirectToLanding = true }: Auth
 
   useEffect(() => {
     // Redirect to home if not authenticated and not already on home page
-    if (isLoaded && !user && redirectToLanding && window.location.pathname !== "/") {
+    if (isLoaded && !user && redirectToLanding && typeof window !== 'undefined' && window.location.pathname !== "/") {
       router.push("/");
     }
   }, [user, isLoaded, router, redirectToLanding]);
