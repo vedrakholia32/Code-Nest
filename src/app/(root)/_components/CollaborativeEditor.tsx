@@ -6,16 +6,10 @@ import { useUser } from '@clerk/clerk-react';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import { nanoid } from 'nanoid';
-
-declare global {
-  interface Window {
-    monaco: any;
-  }
-}
+import { Range } from 'monaco-editor';
 
 interface CollaborativeEditorProps {
   roomId: string;
-  fileId?: string;
   initialContent?: string;
   onContentChange?: (content: string) => void;
 }
@@ -29,7 +23,6 @@ interface TextOperation {
 
 const useCollaborativeEditor = ({
   roomId,
-  fileId,
   initialContent = '',
   onContentChange,
 }: CollaborativeEditorProps) => {
@@ -95,7 +88,7 @@ const useCollaborativeEditor = ({
             if (operation.content) {
               const position = model.getPositionAt(operation.position);
               editor.executeEdits('remote-insert', [{
-                range: new window.monaco.Range(
+                range: new Range(
                   position.lineNumber,
                   position.column,
                   position.lineNumber,
@@ -111,7 +104,7 @@ const useCollaborativeEditor = ({
               const startPos = model.getPositionAt(operation.position);
               const endPos = model.getPositionAt(operation.position + operation.length);
               editor.executeEdits('remote-delete', [{
-                range: new window.monaco.Range(
+                range: new Range(
                   startPos.lineNumber,
                   startPos.column,
                   endPos.lineNumber,
@@ -127,7 +120,7 @@ const useCollaborativeEditor = ({
               const startPos = model.getPositionAt(operation.position);
               const endPos = model.getPositionAt(operation.position + operation.length);
               editor.executeEdits('remote-replace', [{
-                range: new window.monaco.Range(
+                range: new Range(
                   startPos.lineNumber,
                   startPos.column,
                   endPos.lineNumber,

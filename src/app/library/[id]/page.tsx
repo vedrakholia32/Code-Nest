@@ -1,11 +1,12 @@
 "use client";
 
+import React from 'react';
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
 import { notFound } from "next/navigation";
 import NavigationHeader from "@/comonents/NavigationHeader";
-import { useState, use } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { 
   ArrowLeft, 
@@ -33,19 +34,28 @@ interface Props {
   }>;
 }
 
-export default function PublicProjectPage({ params }: Props) {
+export default function PublicProjectPage(props: Props) {
+  return <PublicProjectPageClient params={props.params} />;
+}
+
+function PublicProjectPageClient({ params }: Props) {
   const { user } = useUser();
   const userData = useQuery(api.users.getUser, { userId: user?.id ?? "" });
   const { theme, fontSize } = useCodeEditorStore();
   const [activeFileId, setActiveFileId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const { id } = use(params);
+  const [id, setId] = useState<string>("");
+
+  // Handle async params
+  useEffect(() => {
+    params.then(resolved => setId(resolved.id));
+  }, [params]);
 
   const isPro = userData?.isPro ?? false;
 
-  const project = useQuery(api.projects.getProject, {
-    projectId: id as Id<"projects">,
-  });
+  const project = useQuery(api.projects.getProject, 
+    id ? { projectId: id as Id<"projects"> } : "skip"
+  );
   
   const files = useQuery(
     api.files.getProjectFiles,

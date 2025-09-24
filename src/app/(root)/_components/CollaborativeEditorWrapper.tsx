@@ -9,7 +9,7 @@ import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import { nanoid } from 'nanoid';
 import { useRef, useState } from 'react';
-import { editor } from 'monaco-editor';
+import { editor, Range } from 'monaco-editor';
 
 interface CollaborativeEditorWrapperProps {
   roomId: string;
@@ -24,12 +24,6 @@ interface TextOperation {
   position: number;
   content?: string;
   length?: number;
-}
-
-declare global {
-  interface Window {
-    monaco: any;
-  }
 }
 
 export default function CollaborativeEditorWrapper({
@@ -103,7 +97,7 @@ export default function CollaborativeEditorWrapper({
             if (operation.content) {
               const position = model.getPositionAt(operation.position);
               editor.executeEdits('remote-insert', [{
-                range: new window.monaco.Range(
+                range: new Range(
                   position.lineNumber,
                   position.column,
                   position.lineNumber,
@@ -119,7 +113,7 @@ export default function CollaborativeEditorWrapper({
               const startPos = model.getPositionAt(operation.position);
               const endPos = model.getPositionAt(operation.position + operation.length);
               editor.executeEdits('remote-delete', [{
-                range: new window.monaco.Range(
+                range: new Range(
                   startPos.lineNumber,
                   startPos.column,
                   endPos.lineNumber,
@@ -135,7 +129,7 @@ export default function CollaborativeEditorWrapper({
               const startPos = model.getPositionAt(operation.position);
               const endPos = model.getPositionAt(operation.position + operation.length);
               editor.executeEdits('remote-replace', [{
-                range: new window.monaco.Range(
+                range: new Range(
                   startPos.lineNumber,
                   startPos.column,
                   endPos.lineNumber,
