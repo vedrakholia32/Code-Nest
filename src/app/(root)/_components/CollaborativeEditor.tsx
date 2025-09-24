@@ -66,13 +66,17 @@ export default function CollaborativeEditor({
   useEffect(() => {
     if (!user || !roomId) return;
 
+    console.log(`Initializing collaboration for room: ${roomId}`);
+
     // Create Yjs document
     const ydoc = new Y.Doc();
     ydocRef.current = ydoc;
 
     // Create WebRTC provider for real-time sync
     const provider = new WebrtcProvider(roomId, ydoc, {
-      signaling: ['wss://signaling.yjs.dev'], // You might want to host your own signaling server
+      signaling: ['wss://signaling.yjs.dev'],
+      maxConns: 20,
+      filterBcConns: true
     });
     providerRef.current = provider;
 
@@ -85,18 +89,35 @@ export default function CollaborativeEditor({
 
     // Connection status handlers
     provider.on('status', (event: { connected: boolean }) => {
+      console.log('WebRTC connection status:', event.connected);
       setConnectionStatus(event.connected ? 'connected' : 'disconnected');
     });
 
-    provider.on('peers', () => {
-      // Handle peer connections if needed
+    provider.on('peers', (peers: { added: string[], removed: string[], webrtcPeers: string[], bcPeers: string[] }) => {
+      console.log('Connected peers:', peers.webrtcPeers.length + peers.bcPeers.length);
     });
 
-    // Initialize document content if it's empty
+    // Get the text object for Monaco
     const ytext = ydoc.getText('monaco');
-    if (ytext.length === 0 && initialContent) {
-      ytext.insert(0, initialContent);
-    }
+    
+    // Wait for provider to sync before setting initial content
+    provider.on('synced', ({ synced }: { synced: boolean }) => {
+      console.log('Provider sync status:', synced);
+      if (synced && ytext.length === 0 && initialContent) {
+        console.log('Setting initial content:', initialContent);
+        ytext.insert(0, initialContent);
+      }
+    });
+
+    // Listen for connection status changes
+    provider.on('status', ({ connected }: { connected: boolean }) => {
+      console.log('WebRTC Provider connected:', connected);
+    });
+
+    // Listen for peer connections
+    provider.on('peers', ({ webrtcPeers, bcPeers }: { webrtcPeers: unknown[], bcPeers: unknown[] }) => {
+      console.log('Connected peers - WebRTC:', webrtcPeers.length, 'BroadcastChannel:', bcPeers.length);
+    });
 
     // Listen for document changes
     ytext.observe(() => {
@@ -106,6 +127,7 @@ export default function CollaborativeEditor({
     });
 
     return () => {
+      console.log('Cleaning up collaboration');
       bindingRef.current?.destroy();
       provider.destroy();
       ydoc.destroy();
@@ -119,9 +141,20 @@ export default function CollaborativeEditor({
     if (ydocRef.current) {
       const ytext = ydocRef.current.getText('monaco');
       
+      // Set initial content if Yjs document is empty
+      if (ytext.length === 0 && initialContent) {
+        console.log('Setting initial content in Monaco mount:', initialContent);
+        ytext.insert(0, initialContent);
+      }
+      
       // Create Monaco binding for collaborative editing
       const model = editor.getModel();
       if (model) {
+        console.log('Creating Monaco binding for room:', roomId);
+        console.log('Yjs text content length:', ytext.length);
+        console.log('Monaco model content length:', model.getValue().length);
+        console.log('Provider awareness:', providerRef.current?.awareness);
+        
         const binding = new MonacoBinding(
           ytext,
           model,
@@ -129,6 +162,17 @@ export default function CollaborativeEditor({
           providerRef.current?.awareness
         );
         bindingRef.current = binding;
+        console.log('Monaco binding created successfully');
+        
+        // Force sync after binding
+        setTimeout(() => {
+          const currentContent = ytext.toString();
+          console.log('Current Yjs content after binding:', currentContent.substring(0, 100));
+          if (currentContent !== model.getValue()) {
+            console.log('Syncing Monaco with Yjs content');
+            model.setValue(currentContent);
+          }
+        }, 100);
       }
 
       // Track cursor position for presence
