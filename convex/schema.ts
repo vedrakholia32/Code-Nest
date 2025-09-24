@@ -104,15 +104,28 @@ export default defineSchema({
     .index("by_user_id", ["userId"])
     .index("by_room_id_and_user_id", ["roomId", "userId"]),
 
-  // Store Yjs document updates for persistence
-  yjsDocuments: defineTable({
+  // Real-time document operations for collaborative editing
+  documentOperations: defineTable({
     roomId: v.string(),
-    fileId: v.id("files"),
-    update: v.bytes(), // Yjs document update as binary data
-    version: v.number(),
-    createdAt: v.number(),
+    operation: v.object({
+      type: v.union(v.literal("insert"), v.literal("delete"), v.literal("replace")),
+      position: v.number(), // Character position in document
+      content: v.optional(v.string()), // Content for insert/replace
+      length: v.optional(v.number()), // Length for delete/replace
+    }),
+    timestamp: v.number(),
+    userId: v.string(),
+    operationId: v.string(), // Unique ID to prevent duplicates
   })
-    .index("by_room_id", ["roomId"])
-    .index("by_file_id", ["fileId"])
-    .index("by_room_id_and_file_id", ["roomId", "fileId"]),
+    .index("by_room_timestamp", ["roomId", "timestamp"])
+    .index("by_operation_id", ["operationId"]),
+
+  // Store current document state for each room
+  documentStates: defineTable({
+    roomId: v.string(),
+    content: v.string(),
+    lastModified: v.number(),
+    version: v.number(), // Version counter for conflict resolution
+  })
+    .index("by_room", ["roomId"]),
 });

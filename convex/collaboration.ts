@@ -321,3 +321,175 @@ export const listAllRooms = query({
     return rooms;
   }
 });
+
+// Document Operations for Real-Time Collaboration
+
+// Get current document state
+export const getDocumentState = query({
+  args: { roomId: v.string() },
+  handler: async (ctx, args) => {
+    const docState = await ctx.db
+      .query("documentStates")
+      .withIndex("by_room", (q) => q.eq("roomId", args.roomId))
+      .first();
+    
+    return docState || { 
+      roomId: args.roomId, 
+      content: "", 
+      version: 0, 
+      lastModified: Date.now() 
+    };
+  },
+});
+
+// Apply text operation (insert, delete, replace)
+export const applyOperation = mutation({
+  args: {
+    roomId: v.string(),
+    operation: v.object({
+      type: v.union(v.literal("insert"), v.literal("delete"), v.literal("replace")),
+      position: v.number(),
+      content: v.optional(v.string()),
+      length: v.optional(v.number()),
+    }),
+    operationId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new ConvexError("Not authenticated");
+
+    // Check if operation already exists (prevent duplicates)
+    const existingOp = await ctx.db
+      .query("documentOperations")
+      .withIndex("by_operation_id", (q) => q.eq("operationId", args.operationId))
+      .first();
+    
+    if (existingOp) {
+      return { success: false, reason: "Operation already applied" };
+    }
+
+    // Get current document state
+    let docState = await ctx.db
+      .query("documentStates")
+      .withIndex("by_room", (q) => q.eq("roomId", args.roomId))
+      .first();
+
+    let currentContent = docState?.content || "";
+    
+    // Apply the operation
+    let newContent = currentContent;
+    const { operation } = args;
+
+    try {
+      switch (operation.type) {
+        case "insert":
+          if (operation.content !== undefined) {
+            newContent = 
+              currentContent.slice(0, operation.position) + 
+              operation.content + 
+              currentContent.slice(operation.position);
+          }
+          break;
+        case "delete":
+          if (operation.length !== undefined) {
+            newContent = 
+              currentContent.slice(0, operation.position) + 
+              currentContent.slice(operation.position + operation.length);
+          }
+          break;
+        case "replace":
+          if (operation.content !== undefined && operation.length !== undefined) {
+            newContent = 
+              currentContent.slice(0, operation.position) + 
+              operation.content + 
+              currentContent.slice(operation.position + operation.length);
+          }
+          break;
+      }
+
+      // Store the operation
+      await ctx.db.insert("documentOperations", {
+        roomId: args.roomId,
+        operation: args.operation,
+        timestamp: Date.now(),
+        userId: identity.subject,
+        operationId: args.operationId,
+      });
+
+      // Update document state
+      const newVersion = (docState?.version || 0) + 1;
+      if (docState) {
+        await ctx.db.patch(docState._id, {
+          content: newContent,
+          lastModified: Date.now(),
+          version: newVersion,
+        });
+      } else {
+        await ctx.db.insert("documentStates", {
+          roomId: args.roomId,
+          content: newContent,
+          lastModified: Date.now(),
+          version: newVersion,
+        });
+      }
+
+      return { success: true, newContent, version: newVersion };
+    } catch (error) {
+      console.error("Error applying operation:", error);
+      return { success: false, reason: "Failed to apply operation" };
+    }
+  },
+});
+
+// Initialize document with initial content
+export const initializeDocument = mutation({
+  args: {
+    roomId: v.string(),
+    initialContent: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new ConvexError("Not authenticated");
+
+    // Check if document already exists
+    const existingDoc = await ctx.db
+      .query("documentStates")
+      .withIndex("by_room", (q) => q.eq("roomId", args.roomId))
+      .first();
+
+    if (existingDoc) {
+      return { success: false, reason: "Document already initialized" };
+    }
+
+    // Create new document state
+    await ctx.db.insert("documentStates", {
+      roomId: args.roomId,
+      content: args.initialContent,
+      lastModified: Date.now(),
+      version: 1,
+    });
+
+    return { success: true };
+  },
+});
+
+// Get recent operations for synchronization
+export const getRecentOperations = query({
+  args: { 
+    roomId: v.string(),
+    since: v.optional(v.number()) // timestamp
+  },
+  handler: async (ctx, args) => {
+    const sinceTime = args.since || 0;
+    
+    const operations = await ctx.db
+      .query("documentOperations")
+      .withIndex("by_room_timestamp", (q) => 
+        q.eq("roomId", args.roomId).gt("timestamp", sinceTime)
+      )
+      .order("asc")
+      .take(100); // Limit to prevent huge responses
+
+    return operations;
+  },
+});

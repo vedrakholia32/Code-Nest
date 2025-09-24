@@ -14,9 +14,9 @@ import { useCodeEditorStore } from '@/store/useCodeEditorStore';
 import { LANGUAGE_CONFIG } from '../../(root)/_constants';
 import dynamic from 'next/dynamic';
 
-// Dynamically import CollaborativeEditor to prevent SSR issues
-const CollaborativeEditor = dynamic(
-  () => import('../../(root)/_components/CollaborativeEditor'),
+// Dynamically import CollaborativeEditorWrapper to prevent SSR issues
+const CollaborativeEditorWrapper = dynamic(
+  () => import('../../(root)/_components/CollaborativeEditorWrapper'),
   { 
     ssr: false,
     loading: () => (
@@ -213,7 +213,7 @@ export default function CollaboratePage() {
         {/* Editor */}
         <div className="flex-1 p-4">
           <div className="h-full bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg overflow-hidden">
-            <CollaborativeEditor
+            <CollaborativeEditorWrapper
               roomId={roomId}
               language={language}
               initialContent={LANGUAGE_CONFIG[language]?.defaultCode || '// Welcome to collaborative coding!'}

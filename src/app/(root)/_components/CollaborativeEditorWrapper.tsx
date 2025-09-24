@@ -1,23 +1,22 @@
 "use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { editor } from 'monaco-editor';
+import { useEffect } from 'react';
+import { Editor } from '@monaco-editor/react';
+import { defineMonacoThemes } from '../_constants';
+import { LANGUAGE_CONFIG } from '../_constants';
 import { useUser } from '@clerk/clerk-react';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import { nanoid } from 'nanoid';
+import { useRef, useState } from 'react';
+import { editor } from 'monaco-editor';
 
-declare global {
-  interface Window {
-    monaco: any;
-  }
-}
-
-interface CollaborativeEditorProps {
+interface CollaborativeEditorWrapperProps {
   roomId: string;
-  fileId?: string;
+  language: string;
+  theme: string;
+  fontSize: number;
   initialContent?: string;
-  onContentChange?: (content: string) => void;
 }
 
 interface TextOperation {
@@ -27,12 +26,19 @@ interface TextOperation {
   length?: number;
 }
 
-const useCollaborativeEditor = ({
+declare global {
+  interface Window {
+    monaco: any;
+  }
+}
+
+export default function CollaborativeEditorWrapper({
   roomId,
-  fileId,
-  initialContent = '',
-  onContentChange,
-}: CollaborativeEditorProps) => {
+  language,
+  theme,
+  fontSize,
+  initialContent,
+}: CollaborativeEditorWrapperProps) {
   const { user } = useUser();
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -50,23 +56,25 @@ const useCollaborativeEditor = ({
   const initializeDocument = useMutation(api.collaboration.initializeDocument);
   const updatePresence = useMutation(api.collaboration.updatePresence);
 
+  const defaultContent = initialContent || LANGUAGE_CONFIG[language].defaultCode;
+
   // Initialize document with initial content
   useEffect(() => {
     if (!user || !documentState || isInitialized) return;
 
     const initDoc = async () => {
-      if (documentState.content === '' && initialContent) {
+      if (documentState.content === '' && defaultContent) {
         console.log('Initializing document with initial content');
         await initializeDocument({
           roomId,
-          initialContent,
+          initialContent: defaultContent,
         });
       }
       setIsInitialized(true);
     };
 
     initDoc();
-  }, [user, documentState, initialContent, roomId, initializeDocument, isInitialized]);
+  }, [user, documentState, defaultContent, roomId, initializeDocument, isInitialized]);
 
   // Apply remote operations to Monaco editor
   useEffect(() => {
@@ -170,12 +178,8 @@ const useCollaborativeEditor = ({
       isApplyingRemoteChange.current = true;
       model.setValue(documentState.content);
       isApplyingRemoteChange.current = false;
-      
-      if (onContentChange) {
-        onContentChange(documentState.content);
-      }
     }
-  }, [documentState, onContentChange]);
+  }, [documentState]);
 
   // Handle editor content changes
   const handleContentChange = async (value: string | undefined) => {
@@ -281,10 +285,6 @@ const useCollaborativeEditor = ({
         if (!isApplyingRemoteChange.current) {
           const content = model.getValue();
           handleContentChange(content);
-          
-          if (onContentChange) {
-            onContentChange(content);
-          }
         }
       });
     }
@@ -298,22 +298,69 @@ const useCollaborativeEditor = ({
           cursorPosition: {
             line: position.lineNumber,
             column: position.column,
-            // fileId, // Commenting out since type mismatch
+            // fileId omitted due to type issues
           },
         }).catch(console.error);
       }
     });
   };
 
+  const isReady = isInitialized && documentState !== undefined;
+  const content = documentState?.content || defaultContent;
+
   if (!user) {
-    return <div>Please sign in to collaborate</div>;
+    return (
+      <div className="flex items-center justify-center h-full bg-gray-50 dark:bg-gray-900 rounded-lg">
+        <p className="text-gray-500 dark:text-gray-400">Please sign in to collaborate</p>
+      </div>
+    );
   }
 
-  return {
-    handleEditorDidMount,
-    isReady: isInitialized && documentState !== undefined,
-    content: documentState?.content || initialContent,
-  };
-};
+  if (!isReady) {
+    return (
+      <div className="flex items-center justify-center h-full bg-gray-50 dark:bg-gray-900 rounded-lg">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-500 dark:text-gray-400">
+            Connecting to collaboration room...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
-export default useCollaborativeEditor;
+  return (
+    <Editor
+      height="100%"
+      language={LANGUAGE_CONFIG[language].monacoLanguage}
+      theme={theme}
+      value={content}
+      beforeMount={defineMonacoThemes}
+      onMount={handleEditorDidMount}
+      options={{
+        minimap: { enabled: false },
+        fontSize,
+        automaticLayout: true,
+        scrollBeyondLastLine: false,
+        padding: { top: 16, bottom: 16 },
+        renderWhitespace: "selection",
+        fontFamily: '"Fira Code", "Cascadia Code", Consolas, monospace',
+        fontLigatures: true,
+        cursorBlinking: "smooth",
+        smoothScrolling: true,
+        contextmenu: true,
+        renderLineHighlight: "all",
+        lineHeight: 1.6,
+        letterSpacing: 0.5,
+        roundedSelection: true,
+        scrollbar: {
+          vertical: "hidden",
+          horizontal: "hidden",
+        },
+        overviewRulerLanes: 0,
+        hideCursorInOverviewRuler: true,
+        overviewRulerBorder: false,
+      }}
+    />
+  );
+}

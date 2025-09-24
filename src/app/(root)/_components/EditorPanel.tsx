@@ -17,12 +17,16 @@ import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import dynamic from "next/dynamic";
 
-// Dynamically import CollaborativeEditor to prevent SSR issues
-const CollaborativeEditor = dynamic(
-  () => import("./CollaborativeEditor"),
+// Dynamically import CollaborativeEditorWrapper to prevent SSR issues
+const CollaborativeEditorWrapper = dynamic(
+  () => import("./CollaborativeEditorWrapper"),
   { 
     ssr: false,
-    loading: () => <EditorPanelSkeleton />
+    loading: () => (
+      <div className="flex items-center justify-center h-full">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      </div>
+    )
   }
 );
 
@@ -229,7 +233,7 @@ function EditorPanel() {
             {clerk.loaded && (
               <>
                 {isInCollaboration && collaborationRoomId ? (
-                  <CollaborativeEditor
+                  <CollaborativeEditorWrapper
                     roomId={collaborationRoomId}
                     language={language}
                     theme={theme}
