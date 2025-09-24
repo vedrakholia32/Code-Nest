@@ -4,9 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:yjs": "node yjs-server.js",
+    "dev:full": "concurrently \"npm run dev:yjs\" \"npm run dev\"",
     "build": "next build",
+    "build:production": "cross-env NODE_ENV=production next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "deploy": "vercel --prod"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.31.5",
@@ -27,8 +31,11 @@
     "react-hot-toast": "^2.6.0",
     "react-syntax-highlighter": "^15.6.6",
     "svix": "^1.75.0",
+    "ws": "^8.18.3",
     "y-monaco": "^0.1.6",
+    "y-protocols": "^1.0.6",
     "y-webrtc": "^10.3.0",
+    "y-websocket": "^3.0.0",
     "yjs": "^13.6.27",
     "zustand": "^5.0.8"
   },
@@ -39,6 +46,8 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.0",
     "tailwindcss": "^4",
